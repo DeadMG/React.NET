@@ -12,28 +12,28 @@ namespace DirectReact
         Vertical
     }
 
-    public class Line : Element<LineState, Line>
+    public class Line<Renderer> : Element<LineState<Renderer>, Line<Renderer>, Renderer>
     {
-        public Line(LineDirection direction, params IElement[] children)
+        public Line(LineDirection direction, params IElement<Renderer>[] children)
         {
             this.Children = children;
             this.Direction = direction;
         }
 
-        public IElement[] Children { get; }
+        public IElement<Renderer>[] Children { get; }
         public LineDirection Direction { get; }
         public Action<ClickEvent> OnMouseClick { get; set; }
     }
 
-    public class LineState : IUpdatableElementState<Line>
+    public class LineState<Renderer> : IUpdatableElementState<Line<Renderer>, Renderer>
     {
-        private List<IElementState> nestedElementStates;
+        private List<IElementState<Renderer>> nestedElementStates;
         private Action<ClickEvent> onMouseClick;
 
-        public LineState(Line e, Bounds b, Renderer r)
+        public LineState(Line<Renderer> e, Bounds b, Renderer r)
         {
             var originalBounds = b;
-            nestedElementStates = new List<IElementState>();
+            nestedElementStates = new List<IElementState<Renderer>>();
             foreach (var child in e.Children)
             {
                 var newState = child.Update(null, b, r);
@@ -44,10 +44,10 @@ namespace DirectReact
             onMouseClick = e.OnMouseClick;
         }
 
-        public void Update(Line other, Bounds b, Renderer r)
+        public void Update(Line<Renderer> other, Bounds b, Renderer r)
         {
             var originalBounds = b;
-            var newStates = new List<IElementState>();
+            var newStates = new List<IElementState<Renderer>>();
             for (int i = 0; i < Math.Max(nestedElementStates.Count, other.Children.Length); ++i)
             {
                 if (i >= other.Children.Length)
@@ -55,7 +55,7 @@ namespace DirectReact
                     nestedElementStates[i].Dispose();
                     continue;
                 }
-                IElementState existingState = i >= nestedElementStates.Count ? null : nestedElementStates[i];
+                IElementState<Renderer> existingState = i >= nestedElementStates.Count ? null : nestedElementStates[i];
                 var newState = other.Children[i].Update(existingState, b, r);
                 newStates.Add(newState);
                 b = Bounds.Remaining(other.Direction, b, newState.BoundingBox);

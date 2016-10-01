@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public abstract class Element<S, E> : IElement
-        where E : Element<S, E>
-        where S : class, IUpdatableElementState<E>
+    public abstract class Element<S, E, Renderer> : IElement<Renderer>
+        where E : Element<S, E, Renderer>
+        where S : class, IUpdatableElementState<E, Renderer>
     {
-        public IElementState Update(IElementState existing, Bounds bounds, Renderer r)
+        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds bounds, Renderer r)
         {
             if (existing == null)
             {

@@ -4,25 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace DirectReact.DirectRenderer
 {
-    public class Background : Element<BackgroundState, Background>
+    public class Background : Element<BackgroundState, Background, Renderer>
     {
-        public Background(SharpDX.Mathematics.Interop.RawColor4 Colour, IElement Child)
+        public Background(SharpDX.Mathematics.Interop.RawColor4 Colour, IElement<Renderer> Child)
         {
             this.Colour = Colour;
             this.Child = Child;
         }
 
         public SharpDX.Mathematics.Interop.RawColor4 Colour { get; }
-        public IElement Child { get; }
+        public IElement<Renderer> Child { get; }
         public Action<ClickEvent> OnMouseClick { get; set; }
     }
 
-    public class BackgroundState : IUpdatableElementState<Background>
+    public class BackgroundState : IUpdatableElementState<Background, Renderer>
     {
         private SharpDX.Direct2D1.SolidColorBrush brush;
-        private IElementState nestedState;
+        private IElementState<Renderer> nestedState;
         private Action<ClickEvent> onMouseClick;
 
         public BackgroundState(Background other, Bounds b, Renderer r)

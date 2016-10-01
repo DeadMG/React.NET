@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
 
-namespace DirectReact
+namespace DirectReact.DirectRenderer
 {
     public class Renderer : IDisposable
     {
@@ -23,9 +23,9 @@ namespace DirectReact
         public readonly SharpDX.DirectWrite.Factory fontFactory;
         public readonly SharpDX.Direct2D1.Factory d2dFactory;
 
-        private IElementState state;
+        private IElementState<Renderer> state;
 
-        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b)
+        public Renderer(IntPtr outputHandle, IElement<Renderer> renderable, Bounds b)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
@@ -51,7 +51,7 @@ namespace DirectReact
             RenderTree(renderable, b);
         }
         
-        public void RenderTree(IElement renderable, Bounds b)
+        public void RenderTree(IElement<Renderer> renderable, Bounds b)
         {
             if (renderable == null) throw new InvalidOperationException();
             state = renderable.Update(state, b, this);

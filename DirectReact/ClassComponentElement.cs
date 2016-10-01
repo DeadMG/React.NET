@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class ClassComponentElement<P, C> : Element<ClassComponentElementState<P, C>, ClassComponentElement<P, C>>
-        where C : Component<P, C>
+    public class ClassComponentElement<P, C, Renderer> : Element<ClassComponentElementState<P, C, Renderer>, ClassComponentElement<P, C, Renderer>, Renderer>
+        where C : Component<P, C, Renderer>
     {
         internal readonly Func<P, C> Component;
 
@@ -20,12 +20,12 @@ namespace DirectReact
         public P Props { get; }        
     }
 
-    public class ClassComponentElementState<P, C> : IUpdatableElementState<ClassComponentElement<P, C>>
-        where C : Component<P, C>
+    public class ClassComponentElementState<P, C, Renderer> : IUpdatableElementState<ClassComponentElement<P, C, Renderer>, Renderer>
+        where C : Component<P, C, Renderer>
     {
         private Bounds latestBounds;
 
-        public ClassComponentElementState(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
+        public ClassComponentElementState(ClassComponentElement<P, C, Renderer> parent, Bounds b, Renderer r)
         {
             ComponentInstance = parent.Component(parent.Props);            
             RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
@@ -40,7 +40,7 @@ namespace DirectReact
             }
         }
 
-        public void Update(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
+        public void Update(ClassComponentElement<P, C, Renderer> parent, Bounds b, Renderer r)
         {
             latestBounds = b;
             ComponentInstance.Props = parent.Props;
@@ -68,7 +68,7 @@ namespace DirectReact
         }
 
         public readonly C ComponentInstance;
-        public IElementState RenderResult;
+        public IElementState<Renderer> RenderResult;
 
         public Bounds BoundingBox
         {

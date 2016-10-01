@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace DirectReact.DirectRenderer
 {
-    public class Text : IElement
+    public class Text : IElement<Renderer>
     {
 
         public Text(string text)
@@ -14,7 +14,7 @@ namespace DirectReact
             this.text = text;
         }
         
-        public IElementState Update(IElementState existing, Bounds b, Renderer r)
+        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds b, Renderer r)
         {
             var existingTextElementState = existing as TextElementState;
             if (existingTextElementState == null)
@@ -29,7 +29,7 @@ namespace DirectReact
         public string text { get; }
     }
 
-    public class TextElementState : IElementState
+    public class TextElementState : IElementState<Renderer>
     {
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;

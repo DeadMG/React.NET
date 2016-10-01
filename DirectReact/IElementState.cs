@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public interface IElementState : IDisposable
+    public interface IElementState<Renderer> : IDisposable
     {
         void Render(Renderer r);
         Bounds BoundingBox { get; }

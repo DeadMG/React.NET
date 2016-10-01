@@ -1,4 +1,5 @@
-﻿using SharpDX.RawInput;
+﻿using DirectReact.DirectRenderer;
+using SharpDX.RawInput;
 using SharpDX.Windows;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,6 @@ namespace DirectReact.Application
                     RenderLoop.Run(renderForm, () =>
                     {
                         renderer.RenderFrame();
-                        renderer.RenderTree(RootComponent.CreateElement(null), bounds);
                     });
                 }
             }
