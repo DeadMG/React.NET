@@ -24,10 +24,8 @@ namespace DirectReact.Application
                     Width = 1280,
                     Height = 720
                 };
-
-                var latestText = "";
-                var clicked = false;
-                using (var renderer = new Renderer(renderForm.Handle, new Text(latestText) { OnMouseClick = click => clicked = true }, bounds))
+                
+                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds))
                 {
                     Device.RegisterDevice(SharpDX.Multimedia.UsagePage.Generic, SharpDX.Multimedia.UsageId.GenericMouse, DeviceFlags.None);
                     Device.MouseInput += (object sender, MouseInputEventArgs e) =>
@@ -41,12 +39,11 @@ namespace DirectReact.Application
                                 Y = location.Y
                             });
                         }
-                        latestText = "X: " + location.X + " Y: " + location.Y + "Clicked?: " + clicked;
                     };
                     RenderLoop.Run(renderForm, () =>
                     {
                         renderer.RenderFrame();
-                        renderer.RenderTree(new Text(latestText) { OnMouseClick = click => clicked = true }, bounds);
+                        renderer.RenderTree(RootComponent.CreateElement(null), bounds);
                     });
                 }
             }

@@ -43,15 +43,24 @@ namespace DirectReact
         }
     }
 
-    public abstract class Component<P, S, C> : Component<P, C>
+    public interface IStatefulComponent
+    {
+        Action OnStateSet { get; set; }
+    }
+
+    public abstract class Component<P, S, C> : Component<P, C>, IStatefulComponent
         where C : Component<P, S, C>
     {
-        public Component(P props)
+        private S realState;
+
+        public Component(P props, S initialState)
             : base(props)
         {
+            realState = initialState;
         }
 
-        public S State { get; internal set; }
+        public S State { get { return realState; } set { realState = value; OnStateSet(); } }
+        public Action OnStateSet { get; set; }
     }
 
     public abstract class Component<C> : Component<EmptyProps, C>

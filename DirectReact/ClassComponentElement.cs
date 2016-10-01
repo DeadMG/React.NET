@@ -23,14 +23,26 @@ namespace DirectReact
     public class ClassComponentElementState<P, C> : IUpdatableElementState<ClassComponentElement<P, C>>
         where C : Component<P, C>
     {
+        private Bounds latestBounds;
+
         public ClassComponentElementState(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
         {
-            ComponentInstance = parent.Component(parent.Props);
+            ComponentInstance = parent.Component(parent.Props);            
             RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
+            latestBounds = b;
+            var statefulComponent = ComponentInstance as IStatefulComponent;
+            if (statefulComponent != null)
+            {
+                statefulComponent.OnStateSet = () =>
+                {
+                    RenderResult = ComponentInstance.Render().Update(RenderResult, latestBounds, r);
+                };
+            }
         }
 
         public void Update(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
         {
+            latestBounds = b;
             ComponentInstance.Props = parent.Props;
             RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
         }
