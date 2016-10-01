@@ -13,8 +13,8 @@ namespace DirectReact.Application
         public override IElement<Renderer> Render()
         {
             return new Line<Renderer>(LineDirection.Horizontal,
-                MenuItemComponent<Renderer>.CreateElement(null),
-                MenuItemComponent<Renderer>.CreateElement(null));
+                MenuItemComponent<Renderer>.CreateElement(new MenuItemProps { Name = "File" }),
+                MenuItemComponent<Renderer>.CreateElement(new MenuItemProps { Name = "Edit" }));
         }
     }
 }
