@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class VerticalList : Element<VerticalListState, VerticalList>
+    public class HorizontalList : Element<HorizontalListState, HorizontalList>
     {
-        public VerticalList(params IElement[] Children)
+        public HorizontalList(params IElement[] Children)
         {
             this.Children = Children;
         }
@@ -16,11 +16,11 @@ namespace DirectReact
         public IElement[] Children { get; }
     }
 
-    public class VerticalListState : IUpdatableElementState<VerticalList>
+    public class HorizontalListState : IUpdatableElementState<HorizontalList>
     {
         private List<IElementState> nestedElementStates;
 
-        public VerticalListState(VerticalList e, Bounds b, Renderer r)
+        public HorizontalListState(HorizontalList e, Bounds b, Renderer r)
         {
             var originalBounds = b;
             nestedElementStates = new List<IElementState>();
@@ -30,22 +30,22 @@ namespace DirectReact
                 nestedElementStates.Add(newState);
                 b = new Bounds
                 {
-                    Height = b.Height - newState.Bounds.Height,
-                    Width = b.Width,
-                    X = b.X,
-                    Y = b.Y + newState.Bounds.Height
+                    Height = b.Height,
+                    Width = b.Width - newState.Bounds.Width,
+                    X = b.X + newState.Bounds.Width,
+                    Y = b.Y 
                 };
             }
             Bounds = new Bounds
             {
                 X = originalBounds.X,
-                Width = nestedElementStates.Max(item => item.Bounds.Width),
+                Height = nestedElementStates.Max(item => item.Bounds.Height),
                 Y = originalBounds.Y,
-                Height = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Height)
+                Width = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Width)
             };
         }
 
-        public void Update(VerticalList other, Bounds b, Renderer r)
+        public void Update(HorizontalList other, Bounds b, Renderer r)
         {
             var originalBounds = b;
             var newStates = new List<IElementState>();
@@ -60,10 +60,10 @@ namespace DirectReact
                 var newState = other.Children[i].Update(existingState, b, r);
                 b = new Bounds
                 {
-                    Height = b.Height - newState.Bounds.Height,
-                    Width = b.Width,
-                    X = b.X,
-                    Y = b.Y + newState.Bounds.Height
+                    Height = b.Height,
+                    Width = b.Width - newState.Bounds.Width,
+                    X = b.X + newState.Bounds.Width,
+                    Y = b.Y
                 };
                 newStates.Add(newState);
             }
@@ -71,19 +71,19 @@ namespace DirectReact
             Bounds = new Bounds
             {
                 X = originalBounds.X,
-                Width = nestedElementStates.Max(item => item.Bounds.Width),
+                Height = nestedElementStates.Max(item => item.Bounds.Height),
                 Y = originalBounds.Y,
-                Height = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Height)
+                Width = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Width)
             };
         }
 
         public Bounds Bounds { get; private set; }
-        
+
         public void Dispose()
         {
             foreach (var state in nestedElementStates)
                 state.Dispose();
-        }        
+        }
 
         public void Render(Renderer r)
         {

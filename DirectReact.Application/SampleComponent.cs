@@ -21,8 +21,16 @@ namespace DirectReact.Application
         public override IElement Render()
         {
             return new VerticalList(
-                new TextElement("FPS"),
-                new TextElement(Props.Frame.ToString()));
+                new HorizontalList(
+                    new VerticalList(
+                        new Text("FPS"),
+                        new Text(Props.Frame.ToString())),
+                    new VerticalList(
+                        new Text("Item1"),
+                        new Text("Item2"),
+                        new Text("Item3"))),
+                new HorizontalList(
+                    new Text("Item5")));
         }
     }
 }

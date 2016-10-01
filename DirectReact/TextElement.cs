@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class TextElement : IElement
+    public class Text : IElement
     {
-        public TextElement(string text)
+        private readonly string text;
+
+        public Text(string text)
         {
-            this.Text = text;
+            this.text = text;
         }
-
-        public string Text { get; }
-
+        
         public IElementState Update(IElementState existing, Bounds b, Renderer r)
         {
             var existingTextElementState = existing as TextElementState;
             if (existingTextElementState == null)
             {
                 existing?.Dispose();
-                return new TextElementState(Text, b, r);
+                return new TextElementState(text, b, r);
             }
-            return new TextElementState(Text, b, r);
+            return new TextElementState(text, b, r);
         }
     }
 
