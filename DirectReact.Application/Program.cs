@@ -22,14 +22,13 @@ namespace DirectReact.Application
                     Width = 1280,
                     Height = 720
                 };
-
-                int frame = 0;
-                using (var renderer = new Renderer(renderForm.Handle, SampleComponent.CreateElement(new SampleComponentProps { Frame = frame }), bounds))
+                
+                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds))
                 {
                     RenderLoop.Run(renderForm, () =>
                     {
                         renderer.RenderFrame();
-                        renderer.RenderTree(SampleComponent.CreateElement(new SampleComponentProps { Frame = frame++ }), bounds);
+                        renderer.RenderTree(RootComponent.CreateElement(null), bounds);
                     });
                 }
             }

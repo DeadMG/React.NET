@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class HorizontalList : Element<HorizontalListState, HorizontalList>
+    public enum LineDirection
     {
-        public HorizontalList(params IElement[] Children)
+        Horizontal,
+        Vertical
+    }
+
+    public class Line : Element<LineState, Line>
+    {
+        public Line(LineDirection direction, params IElement[] children)
         {
-            this.Children = Children;
+            this.Children = children;
+            this.Direction = direction;
         }
 
         public IElement[] Children { get; }
+        public LineDirection Direction { get; }
     }
 
-    public class HorizontalListState : IUpdatableElementState<HorizontalList>
+    public class LineState : IUpdatableElementState<Line>
     {
         private List<IElementState> nestedElementStates;
 
-        public HorizontalListState(HorizontalList e, Bounds b, Renderer r)
+        public LineState(Line e, Bounds b, Renderer r)
         {
             var originalBounds = b;
             nestedElementStates = new List<IElementState>();
@@ -28,24 +36,12 @@ namespace DirectReact
             {
                 var newState = child.Update(null, b, r);
                 nestedElementStates.Add(newState);
-                b = new Bounds
-                {
-                    Height = b.Height,
-                    Width = b.Width - newState.Bounds.Width,
-                    X = b.X + newState.Bounds.Width,
-                    Y = b.Y 
-                };
+                b = Bounds.Remaining(e.Direction, b, newState.BoundingBox);
             }
-            Bounds = new Bounds
-            {
-                X = originalBounds.X,
-                Height = nestedElementStates.Max(item => item.Bounds.Height),
-                Y = originalBounds.Y,
-                Width = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Width)
-            };
+            BoundingBox = Bounds.Sum(e.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
         }
 
-        public void Update(HorizontalList other, Bounds b, Renderer r)
+        public void Update(Line other, Bounds b, Renderer r)
         {
             var originalBounds = b;
             var newStates = new List<IElementState>();
@@ -58,26 +54,14 @@ namespace DirectReact
                 }
                 IElementState existingState = i >= nestedElementStates.Count ? null : nestedElementStates[i];
                 var newState = other.Children[i].Update(existingState, b, r);
-                b = new Bounds
-                {
-                    Height = b.Height,
-                    Width = b.Width - newState.Bounds.Width,
-                    X = b.X + newState.Bounds.Width,
-                    Y = b.Y
-                };
                 newStates.Add(newState);
+                b = Bounds.Remaining(other.Direction, b, newState.BoundingBox);
             }
             nestedElementStates = newStates;
-            Bounds = new Bounds
-            {
-                X = originalBounds.X,
-                Height = nestedElementStates.Max(item => item.Bounds.Height),
-                Y = originalBounds.Y,
-                Width = nestedElementStates.Aggregate(0, (lhs, rhs) => lhs + rhs.Bounds.Width)
-            };
+            BoundingBox = Bounds.Sum(other.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
         }
 
-        public Bounds Bounds { get; private set; }
+        public Bounds BoundingBox { get; private set; }
 
         public void Dispose()
         {

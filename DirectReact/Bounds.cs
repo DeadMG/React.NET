@@ -12,5 +12,47 @@ namespace DirectReact
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public static Bounds Remaining(LineDirection direction, Bounds original, Bounds occupied)
+        {
+            if (direction == LineDirection.Horizontal)
+            {
+                return new Bounds
+                {
+                    Height = original.Height,
+                    Width = original.Width - occupied.Width,
+                    X = original.X + occupied.Width,
+                    Y = original.Y
+                };
+            }
+            return new Bounds
+            {
+                Height = original.Height - occupied.Height,
+                Width = original.Width,
+                X = original.X,
+                Y = original.Y + occupied.Height
+            };
+        }
+
+        public static Bounds Sum(LineDirection direction, Bounds original, IEnumerable<Bounds> occupied)
+        {
+            if (direction == LineDirection.Horizontal)
+            {
+                return new Bounds
+                {
+                    X = original.X,
+                    Height = occupied.Max(item => item.Height),
+                    Y = original.Y,
+                    Width = occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Width)
+                };
+            }
+            return new Bounds
+            {
+                X = original.X,
+                Width = occupied.Max(item => item.Width),
+                Y = original.Y,
+                Height = occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Height)
+            };
+        }
     }
 }

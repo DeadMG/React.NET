@@ -38,7 +38,7 @@ namespace DirectReact
             format = new SharpDX.DirectWrite.TextFormat(r.fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(r.fontFactory, Text, format, b.Width, b.Height);
             textBrush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 1));
-            Bounds = new Bounds
+            BoundingBox = new Bounds
             {
                 X = b.X,
                 Y = b.Y,
@@ -47,7 +47,7 @@ namespace DirectReact
             };
         }
 
-        public Bounds Bounds { get; }
+        public Bounds BoundingBox { get; }
                 
         public void Dispose()
         {
@@ -58,7 +58,7 @@ namespace DirectReact
         
         public void Render(Renderer r)
         {
-            r.d2dTarget.DrawTextLayout(new SharpDX.Mathematics.Interop.RawVector2(Bounds.X, Bounds.Y), layout, textBrush, SharpDX.Direct2D1.DrawTextOptions.Clip);
+            r.d2dTarget.DrawTextLayout(new SharpDX.Mathematics.Interop.RawVector2(BoundingBox.X, BoundingBox.Y), layout, textBrush, SharpDX.Direct2D1.DrawTextOptions.Clip);
         }
     }
 }

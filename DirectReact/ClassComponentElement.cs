@@ -53,11 +53,11 @@ namespace DirectReact
         public readonly C ComponentInstance;
         public IElementState RenderResult;
 
-        public Bounds Bounds
+        public Bounds BoundingBox
         {
             get
             {
-                return RenderResult.Bounds;
+                return RenderResult.BoundingBox;
             }
         }
     }
