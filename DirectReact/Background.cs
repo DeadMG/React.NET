@@ -16,17 +16,20 @@ namespace DirectReact
 
         public SharpDX.Mathematics.Interop.RawColor4 Colour { get; }
         public IElement Child { get; }
+        public Action<ClickEvent> OnMouseClick { get; set; }
     }
 
     public class BackgroundState : IUpdatableElementState<Background>
     {
         private SharpDX.Direct2D1.SolidColorBrush brush;
         private IElementState nestedState;
+        private Action<ClickEvent> onMouseClick;
 
         public BackgroundState(Background other, Bounds b, Renderer r)
         {
             brush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, other.Colour);
             nestedState = other.Child.Update(null, b, r);
+            onMouseClick = other.OnMouseClick;
         }
 
         public Bounds BoundingBox => nestedState.BoundingBox;
@@ -34,6 +37,13 @@ namespace DirectReact
         {
             brush.Dispose();
             nestedState.Dispose();
+        }
+
+        public void OnMouseClick(ClickEvent click)
+        {
+            if (Bounds.IsInBounds(nestedState.BoundingBox, click))
+                nestedState.OnMouseClick(click);
+            onMouseClick?.Invoke(click);
         }
 
         public void Render(Renderer r)
@@ -47,6 +57,7 @@ namespace DirectReact
             brush.Dispose();
             brush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, other.Colour);
             nestedState = other.Child.Update(nestedState, b, r);
+            onMouseClick = other.OnMouseClick;
         }
     }
 }

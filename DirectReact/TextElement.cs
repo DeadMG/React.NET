@@ -8,7 +8,6 @@ namespace DirectReact
 {
     public class Text : IElement
     {
-        private readonly string text;
 
         public Text(string text)
         {
@@ -21,10 +20,13 @@ namespace DirectReact
             if (existingTextElementState == null)
             {
                 existing?.Dispose();
-                return new TextElementState(text, b, r);
+                return new TextElementState(this, b, r);
             }
-            return new TextElementState(text, b, r);
+            return new TextElementState(this, b, r);
         }
+
+        public Action<ClickEvent> OnMouseClick { get; set; }
+        public string text { get; }
     }
 
     public class TextElementState : IElementState
@@ -32,11 +34,12 @@ namespace DirectReact
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
+        private readonly Action<ClickEvent> onMouseClick;
 
-        public TextElementState(string Text, Bounds b, Renderer r)
+        public TextElementState(Text element, Bounds b, Renderer r)
         {
             format = new SharpDX.DirectWrite.TextFormat(r.fontFactory, "Times New Roman", 18);
-            layout = new SharpDX.DirectWrite.TextLayout(r.fontFactory, Text, format, b.Width, b.Height);
+            layout = new SharpDX.DirectWrite.TextLayout(r.fontFactory, element.text, format, b.Width, b.Height);
             textBrush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 1));
             BoundingBox = new Bounds
             {
@@ -45,6 +48,7 @@ namespace DirectReact
                 Height = (int)layout.Metrics.Height,
                 Width = (int)layout.Metrics.Width
             };
+            onMouseClick = element.OnMouseClick;
         }
 
         public Bounds BoundingBox { get; }
@@ -54,6 +58,11 @@ namespace DirectReact
             format.Dispose();
             layout.Dispose();
             textBrush.Dispose();
+        }
+
+        public void OnMouseClick(ClickEvent click)
+        {
+            onMouseClick?.Invoke(click);
         }
         
         public void Render(Renderer r)

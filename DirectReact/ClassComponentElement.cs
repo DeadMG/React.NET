@@ -49,7 +49,12 @@ namespace DirectReact
         {
             RenderResult.Render(r);
         }
-        
+
+        public void OnMouseClick(ClickEvent click)
+        {
+            RenderResult.OnMouseClick(click);
+        }
+
         public readonly C ComponentInstance;
         public IElementState RenderResult;
 

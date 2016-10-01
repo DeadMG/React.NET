@@ -13,6 +13,11 @@ namespace DirectReact
         public int Width { get; set; }
         public int Height { get; set; }
 
+        public static bool IsInBounds(Bounds area, IPositionedEvent location)
+        {
+            return area.X < location.X && (area.X + area.Width) > location.X && area.Y < location.Y && (area.Y + area.Height) > location.Y;
+        }
+
         public static Bounds Remaining(LineDirection direction, Bounds original, Bounds occupied)
         {
             if (direction == LineDirection.Horizontal)

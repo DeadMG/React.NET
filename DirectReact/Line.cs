@@ -22,11 +22,13 @@ namespace DirectReact
 
         public IElement[] Children { get; }
         public LineDirection Direction { get; }
+        public Action<ClickEvent> OnMouseClick { get; set; }
     }
 
     public class LineState : IUpdatableElementState<Line>
     {
         private List<IElementState> nestedElementStates;
+        private Action<ClickEvent> onMouseClick;
 
         public LineState(Line e, Bounds b, Renderer r)
         {
@@ -39,6 +41,7 @@ namespace DirectReact
                 b = Bounds.Remaining(e.Direction, b, newState.BoundingBox);
             }
             BoundingBox = Bounds.Sum(e.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
+            onMouseClick = e.OnMouseClick;
         }
 
         public void Update(Line other, Bounds b, Renderer r)
@@ -59,6 +62,7 @@ namespace DirectReact
             }
             nestedElementStates = newStates;
             BoundingBox = Bounds.Sum(other.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
+            onMouseClick = other.OnMouseClick;
         }
 
         public Bounds BoundingBox { get; private set; }
@@ -75,6 +79,19 @@ namespace DirectReact
             {
                 element.Render(r);
             }
+        }
+
+        public void OnMouseClick(ClickEvent click)
+        {
+            foreach (var child in nestedElementStates)
+            {
+                if (Bounds.IsInBounds(child.BoundingBox, click))
+                {
+                    child.OnMouseClick(click);
+                    break;
+                }
+            }
+            onMouseClick?.Invoke(click);
         }
     }
 }

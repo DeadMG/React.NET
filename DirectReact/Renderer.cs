@@ -82,5 +82,11 @@ namespace DirectReact
             foreach (var disposable in disposables)
                 disposable.Dispose();
         }
+
+        public void OnMouseClick(ClickEvent click)
+        {
+            if (Bounds.IsInBounds(state.BoundingBox, click))
+                state.OnMouseClick(click);
+        }
     }
 }

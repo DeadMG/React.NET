@@ -1,9 +1,11 @@
-﻿using SharpDX.Windows;
+﻿using SharpDX.RawInput;
+using SharpDX.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DirectReact.Application
 {
@@ -22,13 +24,29 @@ namespace DirectReact.Application
                     Width = 1280,
                     Height = 720
                 };
-                
-                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds))
+
+                var latestText = "";
+                var clicked = false;
+                using (var renderer = new Renderer(renderForm.Handle, new Text(latestText) { OnMouseClick = click => clicked = true }, bounds))
                 {
+                    Device.RegisterDevice(SharpDX.Multimedia.UsagePage.Generic, SharpDX.Multimedia.UsageId.GenericMouse, DeviceFlags.None);
+                    Device.MouseInput += (object sender, MouseInputEventArgs e) =>
+                    {
+                        var location = renderForm.PointToClient(Cursor.Position);
+                        if (e.ButtonFlags == MouseButtonFlags.LeftButtonUp)
+                        {
+                            renderer.OnMouseClick(new ClickEvent
+                            {                                
+                                X = location.X,
+                                Y = location.Y
+                            });
+                        }
+                        latestText = "X: " + location.X + " Y: " + location.Y + "Clicked?: " + clicked;
+                    };
                     RenderLoop.Run(renderForm, () =>
                     {
                         renderer.RenderFrame();
-                        renderer.RenderTree(RootComponent.CreateElement(null), bounds);
+                        renderer.RenderTree(new Text(latestText) { OnMouseClick = click => clicked = true }, bounds);
                     });
                 }
             }

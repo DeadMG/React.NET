@@ -10,5 +10,7 @@ namespace DirectReact
     {
         void Render(Renderer r);
         Bounds BoundingBox { get; }
+
+        void OnMouseClick(ClickEvent click);
     }
 }
