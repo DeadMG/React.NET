@@ -9,5 +9,6 @@ namespace DirectReact
     public interface IElementState : IDisposable
     {
         void Render(Renderer r);
+        Bounds Bounds { get; }
     }
 }

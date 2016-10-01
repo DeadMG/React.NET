@@ -9,6 +9,6 @@ namespace DirectReact
     public interface IUpdatableElementState<E> : IElementState
         where E : IElement
     {
-        void Update(E other, Renderer r);
+        void Update(E other, Bounds b, Renderer r);
     }
 }

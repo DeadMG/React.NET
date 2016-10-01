@@ -20,7 +20,9 @@ namespace DirectReact.Application
 
         public override IElement Render()
         {
-            return new CompoundElement(new TextElement(Props.Frame.ToString()));
+            return new VerticalList(
+                new TextElement("FPS"),
+                new TextElement(Props.Frame.ToString()));
         }
     }
 }

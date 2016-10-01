@@ -8,6 +8,6 @@ namespace DirectReact
 {
     public interface IElement
     {
-        IElementState Update(IElementState existing, Renderer r);
+        IElementState Update(IElementState existing, Bounds b, Renderer r);
     }
 }

@@ -25,11 +25,11 @@ namespace DirectReact
 
         private IElementState state;
 
-        public Renderer(IntPtr outputHandle, IElement renderable)
+        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
-                ModeDescription = new ModeDescription(1280, 720, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(b.Width, b.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 2,
@@ -48,13 +48,13 @@ namespace DirectReact
             d2dTarget = new RenderTarget(d2dFactory, backBufferSurface, properties);
             
             fontFactory = new SharpDX.DirectWrite.Factory();
-            RenderTree(renderable);
+            RenderTree(renderable, b);
         }
         
-        public void RenderTree(IElement renderable)
+        public void RenderTree(IElement renderable, Bounds b)
         {
             if (renderable == null) throw new InvalidOperationException();
-            state = renderable.Update(state, this);
+            state = renderable.Update(state, b, this);
         }
 
         public void RenderFrame()

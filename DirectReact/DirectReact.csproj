@@ -58,9 +58,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bounds.cs" />
     <Compile Include="ClassComponentElement.cs" />
     <Compile Include="Component.cs" />
-    <Compile Include="CompoundElement.cs" />
+    <Compile Include="VerticalList.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="IElementState.cs" />

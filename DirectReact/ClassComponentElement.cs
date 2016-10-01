@@ -23,16 +23,16 @@ namespace DirectReact
     public class ClassComponentElementState<P, C> : IUpdatableElementState<ClassComponentElement<P, C>>
         where C : Component<P, C>
     {
-        public ClassComponentElementState(ClassComponentElement<P, C> parent, Renderer r)
+        public ClassComponentElementState(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
         {
             ComponentInstance = parent.Component(parent.Props);
-            RenderResult = ComponentInstance.Render().Update(RenderResult, r);
+            RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
         }
 
-        public void Update(ClassComponentElement<P, C> parent, Renderer r)
+        public void Update(ClassComponentElement<P, C> parent, Bounds b, Renderer r)
         {
             ComponentInstance.Props = parent.Props;
-            RenderResult = ComponentInstance.Render().Update(RenderResult, r);
+            RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
         }
 
         public void Dispose()
@@ -49,8 +49,16 @@ namespace DirectReact
         {
             RenderResult.Render(r);
         }
-
+        
         public readonly C ComponentInstance;
         public IElementState RenderResult;
+
+        public Bounds Bounds
+        {
+            get
+            {
+                return RenderResult.Bounds;
+            }
+        }
     }
 }
