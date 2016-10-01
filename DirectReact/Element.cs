@@ -9,6 +9,7 @@ namespace DirectReact
     public abstract class Element<S, E, Renderer> : IElement<Renderer>
         where E : Element<S, E, Renderer>
         where S : class, IUpdatableElementState<E, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds bounds, Renderer r)
         {

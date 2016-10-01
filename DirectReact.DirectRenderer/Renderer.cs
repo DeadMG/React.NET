@@ -11,7 +11,7 @@ using SharpDX.Direct3D;
 
 namespace DirectReact.DirectRenderer
 {
-    public class Renderer : IDisposable
+    public class Renderer : IDisposable, IRenderer<Renderer>
     {
         public readonly SharpDX.Direct3D11.RenderTargetView renderTargetView;
         public readonly SharpDX.Direct3D11.Device device;
@@ -87,6 +87,23 @@ namespace DirectReact.DirectRenderer
         {
             if (Bounds.IsInBounds(state.BoundingBox, click))
                 state.OnMouseClick(click);
+        }
+
+        public IElementState<Renderer> UpdateTextElementState(IElementState<Renderer> existing, Bounds b, TextElement<Renderer> t)
+        {
+            return new TextElementState(t, b, this);
+        }
+
+        public IElementState<Renderer> UpdateBackgroundElementState(IElementState<Renderer> existing, Bounds b1, BackgroundElement<Renderer> b2)
+        {
+            var existingBackground = existing as BackgroundElementState;
+            if (existingBackground == null)
+            {
+                existing?.Dispose();
+                return new BackgroundElementState(b2, b1, this);
+            }
+            existingBackground.Update(b2, b1, this);
+            return existingBackground;
         }
     }
 }

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace DirectReact.Application
 {
-    public class MenuItemComponent : Component<MenuItemComponent, Renderer>
+    public class MenuItemComponent<Renderer> : Component<MenuItemComponent<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public override IElement<Renderer> Render()
         {
-            return new Text("MenuItem");
+            return new TextElement<Renderer>("MenuItem");
         }
     }
 }

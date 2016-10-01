@@ -10,6 +10,7 @@ namespace DirectReact
 
     public abstract class Component<P, C, Renderer>
         where C : Component<P, C, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public Component(P props)
         {
@@ -50,6 +51,7 @@ namespace DirectReact
 
     public abstract class Component<P, S, C, Renderer> : Component<P, C, Renderer>, IStatefulComponent
         where C : Component<P, S, C, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         private S realState;
 
@@ -65,6 +67,7 @@ namespace DirectReact
 
     public abstract class Component<C, Renderer> : Component<EmptyProps, C, Renderer>
         where C : Component<C, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public Component()
             : base(new EmptyProps())

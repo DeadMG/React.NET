@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace DirectReact.Application
 {
-    public class MenuComponent : Component<MenuComponent, Renderer>
+    public class MenuComponent<Renderer> : Component<MenuComponent<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public override IElement<Renderer> Render()
         {
             return new Line<Renderer>(LineDirection.Horizontal,
-                MenuItemComponent.CreateElement(null),
-                MenuItemComponent.CreateElement(null));
+                MenuItemComponent<Renderer>.CreateElement(null),
+                MenuItemComponent<Renderer>.CreateElement(null));
         }
     }
 }

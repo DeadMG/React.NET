@@ -12,7 +12,8 @@ namespace DirectReact.Application
         public bool Clicked { get; set; }
     }
 
-    public class SourceViewerComponent : Component<EmptyProps, SourceViewerState, SourceViewerComponent, Renderer>
+    public class SourceViewerComponent<Renderer> : Component<EmptyProps, SourceViewerState, SourceViewerComponent<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public SourceViewerComponent(EmptyProps props) : base(props, new SourceViewerState { Clicked = false })
         {
@@ -21,8 +22,8 @@ namespace DirectReact.Application
         public override IElement<Renderer> Render()
         {
             return new Line<Renderer>(LineDirection.Horizontal,
-                new Text("Clicked:"),
-                new Text(this.State.Clicked.ToString())) { OnMouseClick = click => this.State = new SourceViewerState { Clicked = !this.State.Clicked } };
+                new TextElement<Renderer>("Clicked:"),
+                new TextElement<Renderer>(this.State.Clicked.ToString())) { OnMouseClick = click => this.State = new SourceViewerState { Clicked = !this.State.Clicked } };
         }
     }
 }

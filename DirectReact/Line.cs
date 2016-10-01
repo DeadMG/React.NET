@@ -13,6 +13,7 @@ namespace DirectReact
     }
 
     public class Line<Renderer> : Element<LineState<Renderer>, Line<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public Line(LineDirection direction, params IElement<Renderer>[] children)
         {
@@ -26,6 +27,7 @@ namespace DirectReact
     }
 
     public class LineState<Renderer> : IUpdatableElementState<Line<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         private List<IElementState<Renderer>> nestedElementStates;
         private Action<ClickEvent> onMouseClick;

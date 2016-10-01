@@ -8,16 +8,17 @@ using System.Threading.Tasks;
 
 namespace DirectReact.Application
 {
-    public class RootComponent : Component<RootComponent, Renderer>
+    public class RootComponent<Renderer> : Component<RootComponent<Renderer>, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         public override IElement<Renderer> Render()
         {
             return new Line<Renderer>(LineDirection.Vertical,
-                new Text("DirectReact Sample"),
-                MenuComponent.CreateElement(null),
+                new TextElement<Renderer>("DirectReact Sample"),
+                MenuComponent<Renderer>.CreateElement(null),
                 new Line<Renderer>(LineDirection.Horizontal,
-                    ProjectViewerComponent.CreateElement(null),
-                    SourceViewerComponent.CreateElement(null)));
+                    ProjectViewerComponent<Renderer>.CreateElement(null),
+                    SourceViewerComponent<Renderer>.CreateElement(null)));
         }
     }
 }

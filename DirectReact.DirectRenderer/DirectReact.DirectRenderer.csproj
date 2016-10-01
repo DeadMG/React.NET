@@ -56,10 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Background.cs" />
+    <Compile Include="BackgroundElementState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="TextElement.cs" />
+    <Compile Include="TextElementState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectReact\DirectReact.csproj">

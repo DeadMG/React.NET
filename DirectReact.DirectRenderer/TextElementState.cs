@@ -6,28 +6,6 @@ using System.Threading.Tasks;
 
 namespace DirectReact.DirectRenderer
 {
-    public class Text : IElement<Renderer>
-    {
-
-        public Text(string text)
-        {
-            this.text = text;
-        }
-        
-        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds b, Renderer r)
-        {
-            var existingTextElementState = existing as TextElementState;
-            if (existingTextElementState == null)
-            {
-                existing?.Dispose();
-                return new TextElementState(this, b, r);
-            }
-            return new TextElementState(this, b, r);
-        }
-
-        public Action<ClickEvent> OnMouseClick { get; set; }
-        public string text { get; }
-    }
 
     public class TextElementState : IElementState<Renderer>
     {
@@ -36,7 +14,7 @@ namespace DirectReact.DirectRenderer
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
         private readonly Action<ClickEvent> onMouseClick;
 
-        public TextElementState(Text element, Bounds b, Renderer r)
+        public TextElementState(TextElement<Renderer> element, Bounds b, Renderer r)
         {
             format = new SharpDX.DirectWrite.TextFormat(r.fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(r.fontFactory, element.text, format, b.Width, b.Height);

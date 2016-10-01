@@ -8,6 +8,7 @@ namespace DirectReact
 {
     public class ClassComponentElement<P, C, Renderer> : Element<ClassComponentElementState<P, C, Renderer>, ClassComponentElement<P, C, Renderer>, Renderer>
         where C : Component<P, C, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         internal readonly Func<P, C> Component;
 
@@ -22,6 +23,7 @@ namespace DirectReact
 
     public class ClassComponentElementState<P, C, Renderer> : IUpdatableElementState<ClassComponentElement<P, C, Renderer>, Renderer>
         where C : Component<P, C, Renderer>
+        where Renderer : IRenderer<Renderer>
     {
         private Bounds latestBounds;
 
@@ -69,13 +71,6 @@ namespace DirectReact
 
         public readonly C ComponentInstance;
         public IElementState<Renderer> RenderResult;
-
-        public Bounds BoundingBox
-        {
-            get
-            {
-                return RenderResult.BoundingBox;
-            }
-        }
+        public Bounds BoundingBox => RenderResult.BoundingBox;
     }
 }
