@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectReact.Application", "DirectReact.Application\DirectReact.Application.csproj", "{8231F419-A6FB-4553-9E65-F2D22B3DF105}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.Application", "React.Application\React.Application.csproj", "{8231F419-A6FB-4553-9E65-F2D22B3DF105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectReact", "DirectReact\DirectReact.csproj", "{F27C39B5-862E-4D84-9D4D-461D5747A5A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.Core", "React.Core\React.Core.csproj", "{F27C39B5-862E-4D84-9D4D-461D5747A5A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectReact.UnitTests", "DirectReact.UnitTests\DirectReact.UnitTests.csproj", "{D85CB9FD-3354-48CA-B85F-E93B232A44ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.UnitTests", "React.UnitTests\React.UnitTests.csproj", "{D85CB9FD-3354-48CA-B85F-E93B232A44ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectReact.DirectRenderer", "DirectReact.DirectRenderer\DirectReact.DirectRenderer.csproj", "{27C90C8F-DA91-448C-93E3-81038AE92790}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.Direct2DRenderer", "React.Direct2DRenderer\React.Direct2DRenderer.csproj", "{27C90C8F-DA91-448C-93E3-81038AE92790}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
