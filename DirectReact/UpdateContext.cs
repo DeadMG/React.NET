@@ -8,7 +8,7 @@ namespace DirectReact
 {
     public class UpdateContext
     {
-        public UpdateContext(Bounds bounds, IRenderer renderer, object context)
+        public UpdateContext(Bounds bounds, IRenderer renderer, IComponentContext context)
         {
             this.Bounds = bounds;
             this.Renderer = renderer;
@@ -17,6 +17,6 @@ namespace DirectReact
 
         public Bounds Bounds { get; }
         public IRenderer Renderer { get; }
-        public object Context { get; }
+        public IComponentContext Context { get; }
     }
 }

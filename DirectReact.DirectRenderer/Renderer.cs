@@ -25,7 +25,7 @@ namespace DirectReact.DirectRenderer
 
         private IElementState state;
 
-        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, object initialContext)
+        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, IComponentContext initialContext)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
@@ -51,7 +51,7 @@ namespace DirectReact.DirectRenderer
             RenderTree(renderable, b, initialContext);
         }
         
-        public void RenderTree(IElement renderable, Bounds bounds, object o)
+        public void RenderTree(IElement renderable, Bounds bounds, IComponentContext o)
         {
             if (renderable == null) throw new InvalidOperationException();
             state = renderable.Update(state, new UpdateContext(bounds, this, o));
@@ -89,12 +89,12 @@ namespace DirectReact.DirectRenderer
                 state.OnMouseClick(click);
         }
 
-        public IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement t, object o)
+        public IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement t, IComponentContext o)
         {
             return new TextElementState(t, b, this, o);
         }
 
-        public IElementState UpdateBackgroundElementState(IElementState existing, Bounds b1, BackgroundElement b2, object o)
+        public IElementState UpdateBackgroundElementState(IElementState existing, Bounds b1, BackgroundElement b2, IComponentContext o)
         {
             var context = new UpdateContext(b1, this, o);
             var existingBackground = existing as BackgroundElementState;

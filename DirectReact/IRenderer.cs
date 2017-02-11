@@ -8,7 +8,7 @@ namespace DirectReact
 {
     public interface IRenderer
     {
-        IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement element, object context);
-        IElementState UpdateBackgroundElementState(IElementState existing, Bounds b, BackgroundElement element, object context);
+        IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement element, IComponentContext context);
+        IElementState UpdateBackgroundElementState(IElementState existing, Bounds b, BackgroundElement element, IComponentContext context);
     }
 }

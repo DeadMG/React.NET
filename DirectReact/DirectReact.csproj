@@ -47,6 +47,7 @@
     <Compile Include="ClassComponentElement.cs" />
     <Compile Include="Colour.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="IComponentContext.cs" />
     <Compile Include="IPositionedEvent.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Line.cs" />

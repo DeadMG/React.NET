@@ -17,6 +17,8 @@ namespace DirectReact
         }
 
         public P Props { get; internal set; }
+        public IComponentContext Context { get; internal set; }
+
         public abstract IElement Render();
 
         public static ClassComponentElement<P, C> CreateElement(P currentProps)

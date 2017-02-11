@@ -43,6 +43,7 @@ namespace DirectReact
         public ClassComponentElementState(ClassComponentElement<P, C> parent, UpdateContext context)
         {
             ComponentInstance = CreateInstance(parent.Props);
+            ComponentInstance.Context = context.Context;
             ComponentInstance.CreatingElementState = this;
             RenderResult = ComponentInstance.Render().Update(RenderResult, context);
             latestContext = context;
@@ -57,6 +58,7 @@ namespace DirectReact
         {
             latestContext = context;
             ComponentInstance.Props = parent.Props;
+            ComponentInstance.Context = context.Context;
             RenderResult = ComponentInstance.Render().Update(RenderResult, context);
         }
 

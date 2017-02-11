@@ -13,7 +13,7 @@ namespace DirectReact.DirectRenderer
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
         private readonly Action<ClickEvent> onMouseClick;
 
-        public TextElementState(ITextElement element, Bounds b, IRenderer r, object o)
+        public TextElementState(ITextElement element, Bounds b, IRenderer r, IComponentContext o)
         {
             format = new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(r).fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(r).fontFactory, element.Text, format, b.Width, b.Height);
