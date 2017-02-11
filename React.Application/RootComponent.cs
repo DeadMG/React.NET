@@ -12,12 +12,14 @@ namespace DirectReact.Application
     {
         public override IElement Render()
         {
-            return new Line(LineDirection.Vertical,
-                new TextElement("DirectReact Sample"),
-                MenuComponent.CreateElement(null),
-                new Line(LineDirection.Horizontal,
-                    ProjectViewerComponent.CreateElement(null),
-                    SourceViewerComponent.CreateElement(null)));
+            return new BackgroundElement(new Colour { R = 0.0f, G = 0.0f, A = 1.0f, B = 0.0f },
+                new StretchElement(
+                    new Line(LineDirection.Vertical,
+                        new TextElement("DirectReact Sample"),
+                        MenuComponent.CreateElement(null),
+                        new Line(LineDirection.Horizontal,
+                            ProjectViewerComponent.CreateElement(null),
+                            SourceViewerComponent.CreateElement(null)))));
         }
     }
 }

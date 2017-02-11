@@ -21,6 +21,6 @@ namespace DirectReact
 
         public Colour Colour { get; }
         public IElement Child { get; }
-        public Action<ClickEvent> OnMouseClick { get; set; }
+        public Action<ClickEvent> OnMouseClick { get; }
     }
 }

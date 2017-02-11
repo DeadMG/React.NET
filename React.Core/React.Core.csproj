@@ -57,6 +57,7 @@
     <Compile Include="IUpdatableElementState.cs" />
     <Compile Include="ClickEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StretchElement.cs" />
     <Compile Include="TextElement.cs" />
     <Compile Include="UpdateContext.cs" />
   </ItemGroup>
