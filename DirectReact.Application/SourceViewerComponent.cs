@@ -12,18 +12,17 @@ namespace DirectReact.Application
         public bool Clicked { get; set; }
     }
 
-    public class SourceViewerComponent<Renderer> : Component<EmptyProps, SourceViewerState, SourceViewerComponent<Renderer>, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class SourceViewerComponent : Component<EmptyProps, SourceViewerState, SourceViewerComponent>
     {
         public SourceViewerComponent(EmptyProps props) : base(props, new SourceViewerState { Clicked = false })
         {
         }
 
-        public override IElement<Renderer> Render()
+        public override IElement Render()
         {
-            return new Line<Renderer>(LineDirection.Horizontal,
-                new TextElement<Renderer>("Clicked:"),
-                new TextElement<Renderer>(this.State.Clicked.ToString())) { OnMouseClick = click => this.State = new SourceViewerState { Clicked = !this.State.Clicked } };
+            return new Line(LineDirection.Horizontal,
+                new TextElement("Clicked:"),
+                new TextElement(this.State.Clicked.ToString())) { OnMouseClick = click => this.State = new SourceViewerState { Clicked = !this.State.Clicked } };
         }
     }
 }

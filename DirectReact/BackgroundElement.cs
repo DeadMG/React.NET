@@ -6,22 +6,21 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class BackgroundElement<Renderer> : IElement<Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class BackgroundElement : IElement
     {
-        public BackgroundElement(Colour Colour, IElement<Renderer> Child)
+        public BackgroundElement(Colour Colour, IElement Child)
         {
             this.Colour = Colour;
             this.Child = Child;
         }
 
-        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds b, Renderer r)
+        public IElementState Update(IElementState existing, UpdateContext context)
         {
-            return r.UpdateBackgroundElementState(existing, b, this);
+            return context.Renderer.UpdateBackgroundElementState(existing, context.Bounds, this, context.Context);
         }
 
         public Colour Colour { get; }
-        public IElement<Renderer> Child { get; }
+        public IElement Child { get; }
         public Action<ClickEvent> OnMouseClick { get; set; }
     }
 }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public interface IElement<Renderer>
-        where Renderer : IRenderer<Renderer>
+    public interface IElement
     {
-        IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds b, Renderer r);
+        IElementState Update(IElementState existing, UpdateContext context);
     }
 }

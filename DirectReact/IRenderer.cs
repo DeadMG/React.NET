@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public interface IRenderer<R>
-        where R : IRenderer<R>
+    public interface IRenderer
     {
-        IElementState<R> UpdateTextElementState(IElementState<R> existing, Bounds b, TextElement<R> element);
-        IElementState<R> UpdateBackgroundElementState(IElementState<R> existing, Bounds b, BackgroundElement<R> element);
+        IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement element, object context);
+        IElementState UpdateBackgroundElementState(IElementState existing, Bounds b, BackgroundElement element, object context);
     }
 }

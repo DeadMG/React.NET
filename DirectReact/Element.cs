@@ -6,24 +6,23 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public abstract class Element<S, E, Renderer> : IElement<Renderer>
-        where E : Element<S, E, Renderer>
-        where S : class, IUpdatableElementState<E, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public abstract class Element<S, E> : IElement
+        where E : Element<S, E>
+        where S : class, IUpdatableElementState<E>
     {
-        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds bounds, Renderer r)
+        public IElementState Update(IElementState existing, UpdateContext context)
         {
             if (existing == null)
             {
-                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(Bounds), typeof(Renderer) }).Invoke(new object[] { (E)this, bounds, r });
+                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(UpdateContext) }).Invoke(new object[] { (E)this, context });
             }
             var existingOfType = existing as S;
             if (existingOfType == null)
             {
                 existing.Dispose();
-                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(Bounds), typeof(Renderer) }).Invoke(new object[] { (E)this, bounds, r });
+                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(UpdateContext) }).Invoke(new object[] { (E)this, context });
             }
-            existingOfType.Update((E)this, bounds, r);
+            existingOfType.Update((E)this, context);
             return existingOfType;
         }
     }

@@ -26,7 +26,7 @@ namespace DirectReact.Application
                     Height = 720
                 };
                 
-                using (var renderer = new Renderer(renderForm.Handle, RootComponent<Renderer>.CreateElement(null), bounds))
+                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds, null))
                 {
                     Device.RegisterDevice(SharpDX.Multimedia.UsagePage.Generic, SharpDX.Multimedia.UsageId.GenericMouse, DeviceFlags.None);
                     Device.MouseInput += (object sender, MouseInputEventArgs e) =>

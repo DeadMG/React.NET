@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace DirectReact.Application
 {
-    public class ProjectViewerComponent<Renderer> : Component<ProjectViewerComponent<Renderer>, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class ProjectViewerComponent : Component<ProjectViewerComponent>
     {
-        public override IElement<Renderer> Render()
+        public override IElement Render()
         {
-            return new Line<Renderer>(LineDirection.Vertical,
-                new TextElement<Renderer>("File1"),
-                new TextElement<Renderer>("File2"));
+            return new Line(LineDirection.Vertical,
+                new TextElement("File1"),
+                new TextElement("File2"));
         }
     }
 }

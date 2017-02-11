@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class TextElement<Renderer> : IElement<Renderer>
-        where Renderer : IRenderer<Renderer>
+    public interface ITextElement
+    {
+        Action<ClickEvent> OnMouseClick { get; }
+        string Text { get; }
+    }
+
+    public class TextElement : IElement, ITextElement
     {
         public TextElement(string text)
         {
-            this.text = text;
+            this.Text = text;
         }
 
-        public IElementState<Renderer> Update(IElementState<Renderer> existing, Bounds b, Renderer r)
+        public IElementState Update(IElementState existing, UpdateContext context)
         {
-            return r.UpdateTextElementState(existing, b, this);
+            return context.Renderer.UpdateTextElementState(existing, context.Bounds, this, context.Context);
         }
 
         public Action<ClickEvent> OnMouseClick { get; set; }
-        public string text { get; }
+        public string Text { get; }
     }
 }

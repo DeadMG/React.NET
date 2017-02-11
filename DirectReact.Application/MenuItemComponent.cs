@@ -13,16 +13,15 @@ namespace DirectReact.Application
         public Action OnClick { get; set; }
     }
 
-    public class MenuItemComponent<Renderer> : Component<MenuItemProps, MenuItemComponent<Renderer>, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class MenuItemComponent : Component<MenuItemProps, MenuItemComponent>
     {
         public MenuItemComponent(MenuItemProps props) : base(props)
         {
         }
 
-        public override IElement<Renderer> Render()
+        public override IElement Render()
         {
-            return new TextElement<Renderer>(this.Props.Name);
+            return new TextElement(this.Props.Name);
         }
     }
 }

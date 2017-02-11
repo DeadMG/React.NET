@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace DirectReact.DirectRenderer
 {
-    public class BackgroundElementState : IElementState<Renderer>
+    public class BackgroundElementState : IElementState
     {
         private SharpDX.Direct2D1.SolidColorBrush brush;
-        private IElementState<Renderer> nestedState;
+        private IElementState nestedState;
         private Action<ClickEvent> onMouseClick;
 
-        public BackgroundElementState(BackgroundElement<Renderer> other, Bounds b, Renderer r)
+        public BackgroundElementState(BackgroundElement other, UpdateContext context)
         {
-            brush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
+            brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
                 R = other.Colour.R,
                 G = other.Colour.G,
                 B = other.Colour.B,
                 A = other.Colour.A
             });
-            nestedState = other.Child.Update(null, b, r);
+            nestedState = other.Child.Update(null, context);
             onMouseClick = other.OnMouseClick;
         }
 
@@ -40,16 +40,16 @@ namespace DirectReact.DirectRenderer
             onMouseClick?.Invoke(click);
         }
 
-        public void Render(Renderer r)
+        public void Render(IRenderer r)
         {
-            r.d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);
+            Renderer.AssertRendererType(r).d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);
             nestedState.Render(r);
         }
 
-        public void Update(BackgroundElement<Renderer> other, Bounds b, Renderer r)
+        public void Update(BackgroundElement other, UpdateContext context)
         {
             brush.Dispose();
-            brush = new SharpDX.Direct2D1.SolidColorBrush(r.d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
+            brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
                 R = other.Colour.R,
                 G = other.Colour.G,
@@ -57,7 +57,7 @@ namespace DirectReact.DirectRenderer
                 A = other.Colour.A
             });
             onMouseClick = other.OnMouseClick;
-            nestedState = other.Child.Update(nestedState, b, r);
+            nestedState = other.Child.Update(nestedState, context);
         }
     }
 }

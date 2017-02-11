@@ -8,9 +8,8 @@ namespace DirectReact
 {
     public class EmptyProps { };
 
-    public abstract class Component<P, C, Renderer>
-        where C : Component<P, C, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public abstract class Component<P, C>
+        where C : Component<P, C>
     {
         public Component(P props)
         {
@@ -18,40 +17,18 @@ namespace DirectReact
         }
 
         public P Props { get; internal set; }
-        public abstract IElement<Renderer> Render();
+        public abstract IElement Render();
 
-        public static ClassComponentElement<P, C, Renderer> CreateElement(P currentProps)
+        public static ClassComponentElement<P, C> CreateElement(P currentProps)
         {
-            return new ClassComponentElement<P, C, Renderer>(props => CreateInstance(props), currentProps);
+            return new ClassComponentElement<P, C>(currentProps);
         }
 
-        private static C CreateInstance(P currentProps)
-        {
-            var normalConstructor = typeof(C).GetConstructor(new Type[] { typeof(P) });
-            if (normalConstructor != null)
-            {
-                return (C)normalConstructor.Invoke(new object[] { currentProps });
-            }
-            if (typeof(P) == typeof(EmptyProps))
-            {
-                var specialEmptyConstructor = typeof(C).GetConstructor(new Type[0]);
-                if (specialEmptyConstructor != null)
-                {
-                    return (C)specialEmptyConstructor.Invoke(new object[0]);
-                }
-            }
-            throw new InvalidOperationException();
-        }
+        internal ClassComponentElementState<P, C> CreatingElementState;
     }
-
-    public interface IStatefulComponent
-    {
-        Action OnStateSet { get; set; }
-    }
-
-    public abstract class Component<P, S, C, Renderer> : Component<P, C, Renderer>, IStatefulComponent
-        where C : Component<P, S, C, Renderer>
-        where Renderer : IRenderer<Renderer>
+    
+    public abstract class Component<P, S, C> : Component<P, C>
+        where C : Component<P, S, C>
     {
         private S realState;
 
@@ -61,13 +38,11 @@ namespace DirectReact
             realState = initialState;
         }
 
-        public S State { get { return realState; } set { realState = value; OnStateSet(); } }
-        public Action OnStateSet { get; set; }
+        public S State { get { return realState; } set { realState = value; CreatingElementState.ForceUpdate(); } }
     }
 
-    public abstract class Component<C, Renderer> : Component<EmptyProps, C, Renderer>
-        where C : Component<C, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public abstract class Component<C> : Component<EmptyProps, C>
+        where C : Component<C>
     {
         public Component()
             : base(new EmptyProps())

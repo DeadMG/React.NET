@@ -6,47 +6,58 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public class ClassComponentElement<P, C, Renderer> : Element<ClassComponentElementState<P, C, Renderer>, ClassComponentElement<P, C, Renderer>, Renderer>
-        where C : Component<P, C, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class ClassComponentElement<P, C> : Element<ClassComponentElementState<P, C>, ClassComponentElement<P, C>>
+        where C : Component<P, C>
     {
-        internal readonly Func<P, C> Component;
-
-        public ClassComponentElement(Func<P, C> Component, P Props)
+        public ClassComponentElement(P Props)
         {
-            this.Component = Component;
             this.Props = Props;
         }
 
-        public P Props { get; }        
+        public P Props { get; }
     }
 
-    public class ClassComponentElementState<P, C, Renderer> : IUpdatableElementState<ClassComponentElement<P, C, Renderer>, Renderer>
-        where C : Component<P, C, Renderer>
-        where Renderer : IRenderer<Renderer>
+    public class ClassComponentElementState<P, C> : IUpdatableElementState<ClassComponentElement<P, C>>
+        where C : Component<P, C>
     {
-        private Bounds latestBounds;
-
-        public ClassComponentElementState(ClassComponentElement<P, C, Renderer> parent, Bounds b, Renderer r)
+        private static C CreateInstance(P currentProps)
         {
-            ComponentInstance = parent.Component(parent.Props);            
-            RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
-            latestBounds = b;
-            var statefulComponent = ComponentInstance as IStatefulComponent;
-            if (statefulComponent != null)
+            var normalConstructor = typeof(C).GetConstructor(new Type[] { typeof(P) });
+            if (normalConstructor != null)
             {
-                statefulComponent.OnStateSet = () =>
-                {
-                    RenderResult = ComponentInstance.Render().Update(RenderResult, latestBounds, r);
-                };
+                return (C)normalConstructor.Invoke(new object[] { currentProps });
             }
+            if (typeof(P) == typeof(EmptyProps))
+            {
+                var specialEmptyConstructor = typeof(C).GetConstructor(new Type[0]);
+                if (specialEmptyConstructor != null)
+                {
+                    return (C)specialEmptyConstructor.Invoke(new object[0]);
+                }
+            }
+            throw new InvalidOperationException();
         }
 
-        public void Update(ClassComponentElement<P, C, Renderer> parent, Bounds b, Renderer r)
+        private UpdateContext latestContext;
+
+        public ClassComponentElementState(ClassComponentElement<P, C> parent, UpdateContext context)
         {
-            latestBounds = b;
+            ComponentInstance = CreateInstance(parent.Props);
+            ComponentInstance.CreatingElementState = this;
+            RenderResult = ComponentInstance.Render().Update(RenderResult, context);
+            latestContext = context;
+        }
+
+        internal void ForceUpdate()
+        {
+            RenderResult = ComponentInstance.Render().Update(RenderResult, latestContext);
+        }
+
+        public void Update(ClassComponentElement<P, C> parent, UpdateContext context)
+        {
+            latestContext = context;
             ComponentInstance.Props = parent.Props;
-            RenderResult = ComponentInstance.Render().Update(RenderResult, b, r);
+            RenderResult = ComponentInstance.Render().Update(RenderResult, context);
         }
 
         public void Dispose()
@@ -59,7 +70,7 @@ namespace DirectReact
             RenderResult.Dispose();
         }
         
-        public void Render(Renderer r)
+        public void Render(IRenderer r)
         {
             RenderResult.Render(r);
         }
@@ -70,7 +81,7 @@ namespace DirectReact
         }
 
         public readonly C ComponentInstance;
-        public IElementState<Renderer> RenderResult;
+        public IElementState RenderResult;
         public Bounds BoundingBox => RenderResult.BoundingBox;
     }
 }

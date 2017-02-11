@@ -11,7 +11,7 @@ using SharpDX.Direct3D;
 
 namespace DirectReact.DirectRenderer
 {
-    public class Renderer : IDisposable, IRenderer<Renderer>
+    public class Renderer : IDisposable, IRenderer
     {
         public readonly SharpDX.Direct3D11.RenderTargetView renderTargetView;
         public readonly SharpDX.Direct3D11.Device device;
@@ -23,9 +23,9 @@ namespace DirectReact.DirectRenderer
         public readonly SharpDX.DirectWrite.Factory fontFactory;
         public readonly SharpDX.Direct2D1.Factory d2dFactory;
 
-        private IElementState<Renderer> state;
+        private IElementState state;
 
-        public Renderer(IntPtr outputHandle, IElement<Renderer> renderable, Bounds b)
+        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, object initialContext)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
@@ -48,13 +48,13 @@ namespace DirectReact.DirectRenderer
             d2dTarget = new RenderTarget(d2dFactory, backBufferSurface, properties);
             
             fontFactory = new SharpDX.DirectWrite.Factory();
-            RenderTree(renderable, b);
+            RenderTree(renderable, b, initialContext);
         }
         
-        public void RenderTree(IElement<Renderer> renderable, Bounds b)
+        public void RenderTree(IElement renderable, Bounds bounds, object o)
         {
             if (renderable == null) throw new InvalidOperationException();
-            state = renderable.Update(state, b, this);
+            state = renderable.Update(state, new UpdateContext(bounds, this, o));
         }
 
         public void RenderFrame()
@@ -89,21 +89,28 @@ namespace DirectReact.DirectRenderer
                 state.OnMouseClick(click);
         }
 
-        public IElementState<Renderer> UpdateTextElementState(IElementState<Renderer> existing, Bounds b, TextElement<Renderer> t)
+        public IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement t, object o)
         {
-            return new TextElementState(t, b, this);
+            return new TextElementState(t, b, this, o);
         }
 
-        public IElementState<Renderer> UpdateBackgroundElementState(IElementState<Renderer> existing, Bounds b1, BackgroundElement<Renderer> b2)
+        public IElementState UpdateBackgroundElementState(IElementState existing, Bounds b1, BackgroundElement b2, object o)
         {
+            var context = new UpdateContext(b1, this, o);
             var existingBackground = existing as BackgroundElementState;
             if (existingBackground == null)
             {
                 existing?.Dispose();
-                return new BackgroundElementState(b2, b1, this);
+                return new BackgroundElementState(b2, context);
             }
-            existingBackground.Update(b2, b1, this);
+            existingBackground.Update(b2, context);
             return existingBackground;
+        }
+
+        public static Renderer AssertRendererType(IRenderer renderer)
+        {
+            if (!(renderer is Renderer)) throw new InvalidOperationException("Can't render D2D compnents with a non-D2D renderer");
+            return renderer as Renderer;
         }
     }
 }

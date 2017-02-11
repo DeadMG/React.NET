@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace DirectReact
 {
-    public interface IElementState<Renderer> : IDisposable
-        where Renderer : IRenderer<Renderer>
+    public interface IElementState : IDisposable
     {
-        void Render(Renderer r);
+        void Render(IRenderer r);
         Bounds BoundingBox { get; }
 
         void OnMouseClick(ClickEvent click);
