@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace React
 {
     public interface IRenderer
     {
-        IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement element, IComponentContext context);
+        IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement element, IComponentContext context);
         IElementState UpdateBackgroundElementState(IElementState existing, Bounds b, BackgroundElement element, IComponentContext context);
     }
 }

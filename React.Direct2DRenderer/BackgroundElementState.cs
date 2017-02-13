@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact.DirectRenderer
+namespace React.DirectRenderer
 {
     public class BackgroundElementState : IElementState
     {
@@ -16,13 +16,13 @@ namespace DirectReact.DirectRenderer
         {
             brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
-                R = other.Colour.R,
-                G = other.Colour.G,
-                B = other.Colour.B,
-                A = other.Colour.A
+                R = other.Props.Colour.R,
+                G = other.Props.Colour.G,
+                B = other.Props.Colour.B,
+                A = other.Props.Colour.A
             });
             nestedState = other.Child.Update(null, context);
-            onMouseClick = other.OnMouseClick;
+            onMouseClick = other.Props.OnMouseClick;
         }
 
         public Bounds BoundingBox => nestedState.BoundingBox;
@@ -51,12 +51,12 @@ namespace DirectReact.DirectRenderer
             brush.Dispose();
             brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
-                R = other.Colour.R,
-                G = other.Colour.G,
-                B = other.Colour.B,
-                A = other.Colour.A
+                R = other.Props.Colour.R,
+                G = other.Props.Colour.G,
+                B = other.Props.Colour.B,
+                A = other.Props.Colour.A
             });
-            onMouseClick = other.OnMouseClick;
+            onMouseClick = other.Props.OnMouseClick;
             nestedState = other.Child.Update(nestedState, context);
         }
     }

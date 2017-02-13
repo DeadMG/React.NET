@@ -4,14 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace React
 {
+    public class BackgroundElementProps : PrimitiveProps
+    {
+        public Colour Colour { get; set; }
+    }
+
     public class BackgroundElement : IElement
     {
-        public BackgroundElement(Colour Colour, IElement Child)
+        public BackgroundElement(BackgroundElementProps props, IElement child)
         {
-            this.Colour = Colour;
-            this.Child = Child;
+            this.Props = props;
+            this.Child = child;
         }
 
         public IElementState Update(IElementState existing, UpdateContext context)
@@ -19,8 +24,7 @@ namespace DirectReact
             return context.Renderer.UpdateBackgroundElementState(existing, context.Bounds, this, context.Context);
         }
 
-        public Colour Colour { get; }
+        public BackgroundElementProps Props { get; }
         public IElement Child { get; }
-        public Action<ClickEvent> OnMouseClick { get; }
     }
 }

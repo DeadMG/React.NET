@@ -4,19 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace React
 {
-    public interface ITextElement
+    public class TextElementProps : PrimitiveProps
     {
-        Action<ClickEvent> OnMouseClick { get; }
-        string Text { get; }
+        public string Text { get; set; }
     }
-
-    public class TextElement : IElement, ITextElement
+    
+    public class TextElement : IElement
     {
-        public TextElement(string text)
+        public TextElement(TextElementProps props)
         {
-            this.Text = text;
+            this.Props = props;
         }
 
         public IElementState Update(IElementState existing, UpdateContext context)
@@ -24,7 +23,6 @@ namespace DirectReact
             return context.Renderer.UpdateTextElementState(existing, context.Bounds, this, context.Context);
         }
 
-        public Action<ClickEvent> OnMouseClick { get; set; }
-        public string Text { get; }
+        public TextElementProps Props { get; }
     }
 }

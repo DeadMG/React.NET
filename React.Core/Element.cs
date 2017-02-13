@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact
+namespace React
 {
     public abstract class Element<S, E> : IElement
         where E : Element<S, E>

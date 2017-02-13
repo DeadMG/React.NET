@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace React
 {
-    public interface IElement
+    public class PrimitiveProps
     {
-        IElementState Update(IElementState existing, UpdateContext context);
+        public Action<ClickEvent> OnMouseClick { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
 
-namespace DirectReact.DirectRenderer
+namespace React.DirectRenderer
 {
     public class Renderer : IDisposable, IRenderer
     {
@@ -89,7 +89,7 @@ namespace DirectReact.DirectRenderer
                 state.OnMouseClick(click);
         }
 
-        public IElementState UpdateTextElementState(IElementState existing, Bounds b, ITextElement t, IComponentContext o)
+        public IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement t, IComponentContext o)
         {
             return new TextElementState(t, b, this, o);
         }

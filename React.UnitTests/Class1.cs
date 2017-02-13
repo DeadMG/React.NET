@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact.UnitTests
+namespace React.UnitTests
 {
     public class Class1
     {

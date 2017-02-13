@@ -1,25 +1,40 @@
-﻿using DirectReact;
-using DirectReact.DirectRenderer;
+﻿using React;
+using React.DirectRenderer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact.Application
+namespace React.Application
 {
-    public class RootComponent : Component<RootComponent>
+    public class RootComponentState
     {
+        public bool Clicked { get; set; }
+    }
+
+    public class RootComponent : Component<EmptyProps, RootComponentState, RootComponent>
+    {
+        public RootComponent(EmptyProps props) : base(props, new RootComponentState { Clicked = false })
+        {
+        }
+
         public override IElement Render()
         {
-            return new BackgroundElement(new Colour { R = 0.0f, G = 0.0f, A = 1.0f, B = 0.0f },
-                new StretchElement(
-                    new Line(LineDirection.Vertical,
-                        new TextElement("DirectReact Sample"),
-                        MenuComponent.CreateElement(null),
-                        new Line(LineDirection.Horizontal,
-                            ProjectViewerComponent.CreateElement(null),
-                            SourceViewerComponent.CreateElement(null)))));
+            return new BackgroundElement(new BackgroundElementProps { Colour = new Colour { R = 0.0f, G = 0.0f, A = 1.0f, B = 0.0f } },
+                this.State.Clicked ? new StretchElement(this.RenderContents()) : this.RenderContents());
+        }
+
+        private IElement RenderContents()
+        {
+            return new Line(LineDirection.Vertical,
+                new TextElement(new TextElementProps { Text = "DirectReact Sample" }),
+                MenuComponent.CreateElement(null),
+                new Line(LineDirection.Horizontal,
+                    ProjectViewerComponent.CreateElement(null),
+                    new Line(LineDirection.Horizontal,
+                        new TextElement(new TextElementProps { Text = "Clicked:" }),
+                        new TextElement(new TextElementProps { Text = this.State.Clicked.ToString(), OnMouseClick = click => this.State = new RootComponentState { Clicked = !this.State.Clicked } }))));
         }
     }
 }

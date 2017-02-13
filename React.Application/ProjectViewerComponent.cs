@@ -1,19 +1,19 @@
-﻿using DirectReact.DirectRenderer;
+﻿using React.DirectRenderer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact.Application
+namespace React.Application
 {
     public class ProjectViewerComponent : Component<ProjectViewerComponent>
     {
         public override IElement Render()
         {
             return new Line(LineDirection.Vertical,
-                new TextElement("File1"),
-                new TextElement("File2"));
+                new TextElement(new TextElementProps { Text = "File1" }),
+                new TextElement(new TextElementProps { Text = "File2" }));
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectReact.DirectRenderer
+namespace React.DirectRenderer
 {
     public class TextElementState : IElementState
     {
@@ -13,10 +13,10 @@ namespace DirectReact.DirectRenderer
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
         private readonly Action<ClickEvent> onMouseClick;
 
-        public TextElementState(ITextElement element, Bounds b, IRenderer r, IComponentContext o)
+        public TextElementState(TextElement element, Bounds b, IRenderer r, IComponentContext o)
         {
             format = new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(r).fontFactory, "Times New Roman", 18);
-            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(r).fontFactory, element.Text, format, b.Width, b.Height);
+            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(r).fontFactory, element.Props.Text, format, b.Width, b.Height);
             textBrush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(r).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 1));
             BoundingBox = new Bounds
             {
@@ -25,7 +25,7 @@ namespace DirectReact.DirectRenderer
                 Height = (int)layout.Metrics.Height,
                 Width = (int)layout.Metrics.Width
             };
-            onMouseClick = element.OnMouseClick;
+            onMouseClick = element.Props.OnMouseClick;
         }
 
         public Bounds BoundingBox { get; }

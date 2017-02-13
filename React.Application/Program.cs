@@ -1,4 +1,4 @@
-﻿using DirectReact.DirectRenderer;
+﻿using React.DirectRenderer;
 using SharpDX.RawInput;
 using SharpDX.Windows;
 using System;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DirectReact.Application
+namespace React.Application
 {
     class Program
     {
