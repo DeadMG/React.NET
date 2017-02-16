@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.Core", "React.Core\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.UnitTests", "React.UnitTests\React.UnitTests.csproj", "{D85CB9FD-3354-48CA-B85F-E93B232A44ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.Direct2DRenderer", "React.Direct2DRenderer\React.Direct2DRenderer.csproj", "{27C90C8F-DA91-448C-93E3-81038AE92790}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React.DirectRenderer", "React.Direct2DRenderer\React.DirectRenderer.csproj", "{27C90C8F-DA91-448C-93E3-81038AE92790}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

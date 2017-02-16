@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
+using React.Core;
 
 namespace React.DirectRenderer
 {

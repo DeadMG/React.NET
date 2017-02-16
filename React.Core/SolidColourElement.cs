@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IUpdatableElementState<E> : IElementState
-        where E : IElement
+    public class SolidColourElementProps : PrimitiveProps
     {
-        void Update(E other, UpdateContext context);
+        public Colour Colour { get; set; }
+    }
+
+    class SolidColourElement
+    {
     }
 }

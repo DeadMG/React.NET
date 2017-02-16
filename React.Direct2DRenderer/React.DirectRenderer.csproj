@@ -7,8 +7,8 @@
     <ProjectGuid>{27C90C8F-DA91-448C-93E3-81038AE92790}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DirectReact.DirectRenderer</RootNamespace>
-    <AssemblyName>DirectReact.DirectRenderer</AssemblyName>
+    <RootNamespace>React.DirectRenderer</RootNamespace>
+    <AssemblyName>React.DirectRenderer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

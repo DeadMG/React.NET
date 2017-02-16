@@ -7,8 +7,8 @@
     <ProjectGuid>{8231F419-A6FB-4553-9E65-F2D22B3DF105}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DirectReact.Application</RootNamespace>
-    <AssemblyName>DirectReact.Application</AssemblyName>
+    <RootNamespace>React.Application</RootNamespace>
+    <AssemblyName>React.Application</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -69,9 +69,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\React.Direct2DRenderer\React.Direct2DRenderer.csproj">
+    <ProjectReference Include="..\React.Direct2DRenderer\React.DirectRenderer.csproj">
       <Project>{27c90c8f-da91-448c-93e3-81038ae92790}</Project>
-      <Name>React.Direct2DRenderer</Name>
+      <Name>React.DirectRenderer</Name>
     </ProjectReference>
     <ProjectReference Include="..\React.Core\React.Core.csproj">
       <Project>{f27c39b5-862e-4d84-9d4d-461d5747a5a4}</Project>
