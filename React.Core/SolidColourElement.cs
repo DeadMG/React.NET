@@ -8,8 +8,15 @@ namespace React.Core
 {
     public class SolidColourElementProps : PrimitiveProps
     {
-        public Colour Colour { get; set; }
-        public Func<Bounds, Bounds> Location { get; set; }
+        public SolidColourElementProps(Colour colour, Func<Bounds, Bounds> location, Action<ClickEvent> onMouseClick = null)
+            : base(onMouseClick)
+        {
+            this.Colour = colour;
+            this.Location = location;
+        }
+
+        public Colour Colour { get; }
+        public Func<Bounds, Bounds> Location { get; }
     }
 
     public class SolidColourElement : IElement

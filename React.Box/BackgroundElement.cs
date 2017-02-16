@@ -34,7 +34,7 @@ namespace React.Box
         {
             nestedState = other.Child.Update(null, context);
             onMouseClick = other.Props.OnMouseClick;
-            solidColourState = context.Renderer.UpdateSolidColourElementState(solidColourState, context.Bounds, new SolidColourElement(new SolidColourElementProps { Colour = other.Props.Colour, Location = b => nestedState.BoundingBox }), context.Context);
+            solidColourState = context.Renderer.UpdateSolidColourElementState(solidColourState, context.Bounds, new SolidColourElement(new SolidColourElementProps(other.Props.Colour, b => nestedState.BoundingBox)), context.Context);
         }
 
         public Bounds BoundingBox => nestedState.BoundingBox;
@@ -62,7 +62,7 @@ namespace React.Box
         {
             onMouseClick = other.Props.OnMouseClick;
             nestedState = other.Child.Update(nestedState, context);
-            solidColourState = context.Renderer.UpdateSolidColourElementState(solidColourState, context.Bounds, new SolidColourElement(new SolidColourElementProps { Colour = other.Props.Colour, Location = b => nestedState.BoundingBox }), context.Context);
+            solidColourState = context.Renderer.UpdateSolidColourElementState(solidColourState, context.Bounds, new SolidColourElement(new SolidColourElementProps(other.Props.Colour, b => nestedState.BoundingBox)), context.Context);
         }
     }
 }

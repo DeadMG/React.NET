@@ -14,8 +14,8 @@ namespace React.Application
         public override IElement Render()
         {
             return new Line(LineDirection.Vertical,
-                new TextElement(new TextElementProps { Text = "File1" }),
-                new TextElement(new TextElementProps { Text = "File2" }));
+                new TextElement(new TextElementProps("File1")),
+                new TextElement(new TextElementProps("File2")));
         }
     }
 }

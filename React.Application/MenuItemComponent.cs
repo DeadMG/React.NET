@@ -23,7 +23,7 @@ namespace React.Application
 
         public override IElement Render()
         {
-            return new TextElement(new TextElementProps { Text = this.Props.Name });
+            return new TextElement(new TextElementProps(this.Props.Name));
         }
     }
 }

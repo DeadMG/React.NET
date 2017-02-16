@@ -30,24 +30,20 @@ namespace React.Application
         private IElement RenderContents()
         {
             return new Line(LineDirection.Vertical,
-                new TextElement(new TextElementProps { Text = "DirectReact Sample" }),
+                new TextElement(new TextElementProps("DirectReact Sample")),
                 MenuComponent.CreateElement(null),
                 new Line(LineDirection.Horizontal,
                     ProjectViewerComponent.CreateElement(null),
                     new Line(LineDirection.Horizontal,
-                        new TextElement(new TextElementProps { Text = "Clicked:" }),
-                        new TextElement(new TextElementProps { Text = this.State.Clicked.ToString(), OnMouseClick = click => this.State = new RootComponentState { Clicked = !this.State.Clicked } }),
+                        new TextElement(new TextElementProps("Clicked:")),
+                        new TextElement(new TextElementProps(this.State.Clicked.ToString(), click => this.State = new RootComponentState { Clicked = !this.State.Clicked })),
                         this.RenderRandomBox())));
         }
 
         private IElement RenderRandomBox()
         {
             if (!State.Clicked) return null;
-            return new SolidColourElement(new SolidColourElementProps
-            {
-                Colour = new Colour(r: 1.0f, g: 0.0f, b: 0.0f, a: 1.0f),
-                Location = bounds => new Bounds(x: bounds.X, y: bounds.Y, height: 40, width: 40)
-            });
+            return new SolidColourElement(new SolidColourElementProps(new Colour(r: 1.0f, g: 0.0f, b: 0.0f, a: 1.0f), bounds => new Bounds(x: bounds.X, y: bounds.Y, height: 40, width: 40)));
         }
     }
 }

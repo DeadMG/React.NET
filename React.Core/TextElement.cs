@@ -8,7 +8,13 @@ namespace React.Core
 {
     public class TextElementProps : PrimitiveProps
     {
-        public string Text { get; set; }
+        public TextElementProps(string text, Action<ClickEvent> onMouseClick = null)
+            : base(onMouseClick)
+        {
+            this.Text = text;
+        }
+
+        public string Text { get; }
     }
     
     public class TextElement : IElement
