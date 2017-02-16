@@ -23,7 +23,7 @@ namespace React.Application
 
         public override IElement Render()
         {
-            return new BackgroundElement(new BackgroundElementProps { Colour = new Colour { R = 0.0f, G = 0.0f, A = 1.0f, B = 0.0f } },
+            return new BackgroundElement(new BackgroundElementProps { Colour = new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f) },
                 this.State.Clicked ? new StretchElement(this.RenderContents()) : this.RenderContents());
         }
 
@@ -45,7 +45,7 @@ namespace React.Application
             if (!State.Clicked) return null;
             return new SolidColourElement(new SolidColourElementProps
             {
-                Colour = new Colour { R = 1.0f, G = 0.0f, B = 0.0f, A = 1.0f },
+                Colour = new Colour(r: 1.0f, g: 0.0f, b: 0.0f, a: 1.0f),
                 Location = bounds => new Bounds(x: bounds.X, y: bounds.Y, height: 40, width: 40)
             });
         }
