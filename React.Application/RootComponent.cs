@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using React.Core;
+using React.Box;
 
 namespace React.Application
 {
@@ -35,7 +36,24 @@ namespace React.Application
                     ProjectViewerComponent.CreateElement(null),
                     new Line(LineDirection.Horizontal,
                         new TextElement(new TextElementProps { Text = "Clicked:" }),
-                        new TextElement(new TextElementProps { Text = this.State.Clicked.ToString(), OnMouseClick = click => this.State = new RootComponentState { Clicked = !this.State.Clicked } }))));
+                        new TextElement(new TextElementProps { Text = this.State.Clicked.ToString(), OnMouseClick = click => this.State = new RootComponentState { Clicked = !this.State.Clicked } }),
+                        this.RenderRandomBox())));
+        }
+
+        private IElement RenderRandomBox()
+        {
+            if (!State.Clicked) return null;
+            return new SolidColourElement(new SolidColourElementProps
+            {
+                Colour = new Colour { R = 1.0f, G = 0.0f, B = 0.0f, A = 1.0f },
+                Location = bounds => new Bounds
+                {
+                    X = bounds.X,
+                    Y = bounds.Y,
+                    Height = (int)40,
+                    Width = (int)40
+                }
+            });
         }
     }
 }

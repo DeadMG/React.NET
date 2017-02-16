@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using React.Core;
 
-namespace React.Core
+namespace React.Box
 {
-    public enum LineDirection
-    {
-        Horizontal,
-        Vertical
-    }
-
     public class Line : Element<LineState, Line>
     {
         public Line(LineDirection direction, params IElement[] children)
@@ -37,11 +32,11 @@ namespace React.Core
             var b = originalBounds;
             foreach (var child in e.Children)
             {
-                var newState = child.Update(null, new UpdateContext(b, context.Renderer, context.Context));
+                var newState = child?.Update(null, new UpdateContext(b, context.Renderer, context.Context));
                 nestedElementStates.Add(newState);
-                b = Bounds.Remaining(e.Direction, b, newState.BoundingBox);
+                if (newState != null) b = b.Remaining(e.Direction, newState.BoundingBox);
             }
-            BoundingBox = Bounds.Sum(e.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
+            BoundingBox = originalBounds.Sum(e.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
             onMouseClick = e.OnMouseClick;
         }
 
@@ -54,16 +49,16 @@ namespace React.Core
             {
                 if (i >= other.Children.Length)
                 {
-                    nestedElementStates[i].Dispose();
+                    nestedElementStates[i]?.Dispose();
                     continue;
                 }
                 IElementState existingState = i >= nestedElementStates.Count ? null : nestedElementStates[i];
-                var newState = other.Children[i].Update(existingState, new UpdateContext(b, context.Renderer, context.Context));
+                var newState = other.Children[i]?.Update(existingState, new UpdateContext(b, context.Renderer, context.Context));
                 newStates.Add(newState);
-                b = Bounds.Remaining(other.Direction, b, newState.BoundingBox);
+                if (newState != null) b = b.Remaining(other.Direction, newState.BoundingBox);
             }
             nestedElementStates = newStates;
-            BoundingBox = Bounds.Sum(other.Direction, originalBounds, nestedElementStates.Select(p => p.BoundingBox));
+            BoundingBox = originalBounds.Sum(other.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
             onMouseClick = other.OnMouseClick;
         }
 
@@ -71,13 +66,13 @@ namespace React.Core
 
         public void Dispose()
         {
-            foreach (var state in nestedElementStates)
+            foreach (var state in nestedElementStates.Where(p => p != null))
                 state.Dispose();
         }
 
         public void Render(IRenderer r)
         {
-            foreach (var element in nestedElementStates)
+            foreach (var element in nestedElementStates.Where(p => p != null))
             {
                 element.Render(r);
             }
@@ -85,9 +80,9 @@ namespace React.Core
 
         public void OnMouseClick(ClickEvent click)
         {
-            foreach (var child in nestedElementStates)
+            foreach (var child in nestedElementStates.Where(p => p != null))
             {
-                if (Bounds.IsInBounds(child.BoundingBox, click))
+                if (child.BoundingBox.IsInBounds(click))
                 {
                     child.OnMouseClick(click);
                     break;

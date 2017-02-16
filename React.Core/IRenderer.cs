@@ -9,6 +9,6 @@ namespace React.Core
     public interface IRenderer
     {
         IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement element, IComponentContext context);
-        IElementState UpdateBackgroundElementState(IElementState existing, Bounds b, BackgroundElement element, IComponentContext context);
+        IElementState UpdateSolidColourElementState(IElementState existing, Bounds b, SolidColourElement element, IComponentContext context);
     }
 }

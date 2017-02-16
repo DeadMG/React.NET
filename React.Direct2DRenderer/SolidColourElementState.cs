@@ -7,13 +7,13 @@ using React.Core;
 
 namespace React.DirectRenderer
 {
-    public class BackgroundElementState : IElementState
+    public class SolidColourElementState : IElementState
     {
         private SharpDX.Direct2D1.SolidColorBrush brush;
-        private IElementState nestedState;
         private Action<ClickEvent> onMouseClick;
+        private Bounds boundingBox;
 
-        public BackgroundElementState(BackgroundElement other, UpdateContext context)
+        public SolidColourElementState(SolidColourElement other, UpdateContext context)
         {
             brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
@@ -22,32 +22,28 @@ namespace React.DirectRenderer
                 B = other.Props.Colour.B,
                 A = other.Props.Colour.A
             });
-            nestedState = other.Child.Update(null, context);
             onMouseClick = other.Props.OnMouseClick;
+            boundingBox = other.Props.Location(context.Bounds);
         }
 
-        public Bounds BoundingBox => nestedState.BoundingBox;
+        public Bounds BoundingBox => boundingBox;
 
         public void Dispose()
         {
             brush.Dispose();
-            nestedState.Dispose();
         }
 
         public void OnMouseClick(ClickEvent click)
         {
-            if (Bounds.IsInBounds(nestedState.BoundingBox, click))
-                nestedState.OnMouseClick(click);
             onMouseClick?.Invoke(click);
         }
 
         public void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);
-            nestedState.Render(r);
         }
 
-        public void Update(BackgroundElement other, UpdateContext context)
+        public void Update(SolidColourElement other, UpdateContext context)
         {
             brush.Dispose();
             brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
@@ -58,7 +54,7 @@ namespace React.DirectRenderer
                 A = other.Props.Colour.A
             });
             onMouseClick = other.Props.OnMouseClick;
-            nestedState = other.Child.Update(nestedState, context);
+            boundingBox = other.Props.Location(context.Bounds);
         }
     }
 }

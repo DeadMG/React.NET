@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using React.Core;
 
-namespace React.Core
+namespace React.Box
 {
     public class StretchElement : Element<StretchElementState, StretchElement>
     {
@@ -35,7 +36,7 @@ namespace React.Core
 
         public void OnMouseClick(ClickEvent click)
         {
-            if (Bounds.IsInBounds(nestedState.BoundingBox, click))
+            if (nestedState.BoundingBox.IsInBounds(click))
                 nestedState.OnMouseClick(click);
         }
 

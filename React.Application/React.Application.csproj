@@ -69,6 +69,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\React.Box\React.Box.csproj">
+      <Project>{ca33a43f-6c03-4d78-b7f3-09d9222427fd}</Project>
+      <Name>React.Box</Name>
+    </ProjectReference>
     <ProjectReference Include="..\React.Direct2DRenderer\React.DirectRenderer.csproj">
       <Project>{27c90c8f-da91-448c-93e3-81038ae92790}</Project>
       <Name>React.DirectRenderer</Name>

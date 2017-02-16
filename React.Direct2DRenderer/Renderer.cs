@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
 using React.Core;
+using React.Box;
 
 namespace React.DirectRenderer
 {
@@ -86,7 +87,7 @@ namespace React.DirectRenderer
 
         public void OnMouseClick(ClickEvent click)
         {
-            if (Bounds.IsInBounds(state.BoundingBox, click))
+            if (state.BoundingBox.IsInBounds(click))
                 state.OnMouseClick(click);
         }
 
@@ -95,14 +96,14 @@ namespace React.DirectRenderer
             return new TextElementState(t, b, this, o);
         }
 
-        public IElementState UpdateBackgroundElementState(IElementState existing, Bounds b1, BackgroundElement b2, IComponentContext o)
+        public IElementState UpdateSolidColourElementState(IElementState existing, Bounds b1, SolidColourElement b2, IComponentContext o)
         {
             var context = new UpdateContext(b1, this, o);
-            var existingBackground = existing as BackgroundElementState;
+            var existingBackground = existing as SolidColourElementState;
             if (existingBackground == null)
             {
                 existing?.Dispose();
-                return new BackgroundElementState(b2, context);
+                return new SolidColourElementState(b2, context);
             }
             existingBackground.Update(b2, context);
             return existingBackground;

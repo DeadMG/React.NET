@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using React.Core;
 
-namespace React.Core
+namespace React.Box
 {
     public abstract class Element<S, E> : IElement
         where E : Element<S, E>
