@@ -19,13 +19,7 @@ namespace React.Application
             {
                 renderForm.ClientSize = new System.Drawing.Size(1280, 720);
                 renderForm.AllowUserResizing = false;
-                var bounds = new Bounds
-                {
-                    X = 0,
-                    Y = 0,
-                    Width = 1280,
-                    Height = 720
-                };
+                var bounds = new Bounds(x: 0, y: 0, width: 1280, height: 720);
                 
                 using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds, null))
                 {

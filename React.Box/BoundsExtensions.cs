@@ -18,42 +18,18 @@ namespace React.Box
         {
             if (direction == LineDirection.Horizontal)
             {
-                return new Bounds
-                {
-                    Height = original.Height,
-                    Width = original.Width - occupied.Width,
-                    X = original.X + occupied.Width,
-                    Y = original.Y
-                };
+                return new Bounds(x: original.X + occupied.Width, y: original.Y, width: original.Width - occupied.Width, height: original.Height);
             }
-            return new Bounds
-            {
-                Height = original.Height - occupied.Height,
-                Width = original.Width,
-                X = original.X,
-                Y = original.Y + occupied.Height
-            };
+            return new Bounds(x: original.X, y: original.Y + occupied.Height, width: original.Width, height: original.Height - occupied.Height);
         }
 
         public static Bounds Sum(this Bounds original, LineDirection direction, IEnumerable<Bounds> occupied)
         {
             if (direction == LineDirection.Horizontal)
             {
-                return new Bounds
-                {
-                    X = original.X,
-                    Height = occupied.Max(item => item.Height),
-                    Y = original.Y,
-                    Width = occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Width)
-                };
+                return new Bounds(x: original.X, y: original.Y, width: occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Width), height: occupied.Max(item => item.Height));
             }
-            return new Bounds
-            {
-                X = original.X,
-                Width = occupied.Max(item => item.Width),
-                Y = original.Y,
-                Height = occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Height)
-            };
+            return new Bounds(x: original.X, y: original.Y, width: occupied.Max(item => item.Width), height: occupied.Aggregate(0, (lhs, rhs) => lhs + rhs.Height));
         }
     }
 }

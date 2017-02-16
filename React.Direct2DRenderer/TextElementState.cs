@@ -19,13 +19,7 @@ namespace React.DirectRenderer
             format = new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(r).fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(r).fontFactory, element.Props.Text, format, b.Width, b.Height);
             textBrush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(r).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 1));
-            BoundingBox = new Bounds
-            {
-                X = b.X,
-                Y = b.Y,
-                Height = (int)layout.Metrics.Height,
-                Width = (int)layout.Metrics.Width
-            };
+            BoundingBox = new Bounds(x: b.X, y: b.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
             onMouseClick = element.Props.OnMouseClick;
         }
 

@@ -46,13 +46,7 @@ namespace React.Application
             return new SolidColourElement(new SolidColourElementProps
             {
                 Colour = new Colour { R = 1.0f, G = 0.0f, B = 0.0f, A = 1.0f },
-                Location = bounds => new Bounds
-                {
-                    X = bounds.X,
-                    Y = bounds.Y,
-                    Height = (int)40,
-                    Width = (int)40
-                }
+                Location = bounds => new Bounds(x: bounds.X, y: bounds.Y, height: 40, width: 40)
             });
         }
     }
