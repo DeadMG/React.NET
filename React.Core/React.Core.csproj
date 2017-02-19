@@ -54,7 +54,9 @@
     <Compile Include="PrimitiveProps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolidColourElement.cs" />
+    <Compile Include="TextClickEvent.cs" />
     <Compile Include="TextElement.cs" />
+    <Compile Include="TextSelection.cs" />
     <Compile Include="UpdateContext.cs" />
   </ItemGroup>
   <ItemGroup>

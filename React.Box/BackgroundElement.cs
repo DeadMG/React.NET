@@ -28,7 +28,7 @@ namespace React.Box
     {
         private IElementState solidColourState;
         private IElementState nestedState;
-        private Action<ClickEvent> onMouseClick;
+        private Action<LeftMouseUpEvent> onMouseClick;
 
         public BackgroundElementState(BackgroundElement other, UpdateContext context)
         {
@@ -45,7 +45,7 @@ namespace React.Box
             nestedState.Dispose();
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             if (nestedState.BoundingBox.IsInBounds(click))
                 nestedState.OnMouseClick(click);

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public class ClickEvent : IPositionedEvent
+    public class LeftMouseUpEvent : IPositionedEvent
     {
-        public ClickEvent(int x, int y)
+        public LeftMouseUpEvent(int x, int y)
         {
             this.X = x;
             this.Y = y;

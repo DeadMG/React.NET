@@ -85,7 +85,7 @@ namespace React.DirectRenderer
                 disposable.Dispose();
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             if (state.BoundingBox.IsInBounds(click))
                 state.OnMouseClick(click);

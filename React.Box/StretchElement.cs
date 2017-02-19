@@ -34,7 +34,7 @@ namespace React.Box
             nestedState.Dispose();
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             if (nestedState.BoundingBox.IsInBounds(click))
                 nestedState.OnMouseClick(click);

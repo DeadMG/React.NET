@@ -8,11 +8,11 @@ namespace React.Core
 {
     public class PrimitiveProps
     {
-        public PrimitiveProps(Action<ClickEvent> onMouseClick = null)
+        public PrimitiveProps(Action<LeftMouseUpEvent> onMouseClick = null)
         {
             this.OnMouseClick = onMouseClick;
         }
 
-        public Action<ClickEvent> OnMouseClick { get; }
+        public Action<LeftMouseUpEvent> OnMouseClick { get; }
     }
 }

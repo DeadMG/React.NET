@@ -17,13 +17,13 @@ namespace React.Box
 
         public IElement[] Children { get; }
         public LineDirection Direction { get; }
-        public Action<ClickEvent> OnMouseClick { get; set; }
+        public Action<LeftMouseUpEvent> OnMouseClick { get; set; }
     }
 
     public class LineState : IUpdatableElementState<Line>
     {
         private List<IElementState> nestedElementStates;
-        private Action<ClickEvent> onMouseClick;
+        private Action<LeftMouseUpEvent> onMouseClick;
 
         public LineState(Line e, UpdateContext context)
         {
@@ -78,7 +78,7 @@ namespace React.Box
             }
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             foreach (var child in nestedElementStates.Where(p => p != null))
             {

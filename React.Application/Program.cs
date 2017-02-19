@@ -29,7 +29,7 @@ namespace React.Application
                         var location = renderForm.PointToClient(Cursor.Position);
                         if (e.ButtonFlags == MouseButtonFlags.LeftButtonUp)
                         {
-                            renderer.OnMouseClick(new ClickEvent(location.X, location.Y));
+                            renderer.OnMouseClick(new LeftMouseUpEvent(location.X, location.Y));
                         }
                     };
                     RenderLoop.Run(renderForm, () =>

@@ -78,7 +78,7 @@ namespace React.Box
             RenderResult.Render(r);
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             RenderResult.OnMouseClick(click);
         }

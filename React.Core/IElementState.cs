@@ -11,6 +11,6 @@ namespace React.Core
         void Render(IRenderer r);
         Bounds BoundingBox { get; }
 
-        void OnMouseClick(ClickEvent click);
+        void OnMouseClick(LeftMouseUpEvent click);
     }
 }

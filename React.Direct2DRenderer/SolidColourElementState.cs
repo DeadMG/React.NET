@@ -10,7 +10,7 @@ namespace React.DirectRenderer
     public class SolidColourElementState : IElementState
     {
         private SharpDX.Direct2D1.SolidColorBrush brush;
-        private Action<ClickEvent> onMouseClick;
+        private Action<LeftMouseUpEvent> onMouseClick;
         private Bounds boundingBox;
 
         public SolidColourElementState(SolidColourElement other, UpdateContext context)
@@ -23,7 +23,7 @@ namespace React.DirectRenderer
                 A = other.Props.Colour.A
             });
             onMouseClick = other.Props.OnMouseClick;
-            boundingBox = other.Props.Location(context.Bounds);
+            boundingBox = other.Props.Location != null ? other.Props.Location(context.Bounds) : context.Bounds;
         }
 
         public Bounds BoundingBox => boundingBox;
@@ -33,7 +33,7 @@ namespace React.DirectRenderer
             brush.Dispose();
         }
 
-        public void OnMouseClick(ClickEvent click)
+        public void OnMouseClick(LeftMouseUpEvent click)
         {
             onMouseClick?.Invoke(click);
         }
