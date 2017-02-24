@@ -50,7 +50,7 @@ namespace React.Box
                     onMouseClick: this.OnTextClick));
         }
 
-        private void OnTextClick(TextClickEvent clickEvent)
+        private void OnTextClick(TextLeftMouseUpEvent clickEvent)
         {
             Props.OnSelectionChange?.Invoke(new[] { new TextSelection(0, clickEvent.TextIndex) });
         }
@@ -80,4 +80,3 @@ namespace React.Box
         }
     }
 }
-if t

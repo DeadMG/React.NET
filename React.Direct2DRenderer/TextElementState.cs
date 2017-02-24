@@ -14,7 +14,7 @@ namespace React.DirectRenderer
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
-        private readonly Action<TextClickEvent> onMouseClick;
+        private readonly Action<TextLeftMouseUpEvent> onMouseClick;
         private readonly List<IElementState> children;
 
         public TextElementState(TextElement element, Bounds b, IRenderer r, IComponentContext o)
@@ -56,8 +56,8 @@ namespace React.DirectRenderer
             RawBool isTrailing;
             RawBool isInside;
             var metrics = layout.HitTestPoint(click.X - BoundingBox.X, click.Y - BoundingBox.Y, out isTrailing, out isInside);
-            if (!isInside) onMouseClick?.Invoke(new TextClickEvent(click.X, click.Y, text.Length));
-            else onMouseClick?.Invoke(new TextClickEvent(click.X, click.Y, isTrailing ? metrics.TextPosition + 1 : metrics.TextPosition));
+            if (!isInside) onMouseClick?.Invoke(new TextLeftMouseUpEvent(click.X, click.Y, text.Length));
+            else onMouseClick?.Invoke(new TextLeftMouseUpEvent(click.X, click.Y, isTrailing ? metrics.TextPosition + 1 : metrics.TextPosition));
         }
         
         public void Render(IRenderer r)

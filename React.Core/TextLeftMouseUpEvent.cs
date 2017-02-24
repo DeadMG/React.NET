@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public class TextClickEvent : LeftMouseUpEvent
+    public class TextLeftMouseUpEvent : LeftMouseUpEvent
     {
-        public TextClickEvent(int x, int y, int textIndex) : base(x, y)
+        public TextLeftMouseUpEvent(int x, int y, int textIndex) : base(x, y)
         {
             this.TextIndex = textIndex;
         }

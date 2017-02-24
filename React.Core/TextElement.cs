@@ -20,7 +20,7 @@ namespace React.Core
 
     public class TextElementProps
     {
-        public TextElementProps(string text, TextuallyPositionedChild[] children = null, Action<TextClickEvent> onMouseClick = null)
+        public TextElementProps(string text, TextuallyPositionedChild[] children = null, Action<TextLeftMouseUpEvent> onMouseClick = null)
         {
             this.Text = text;
             this.OnMouseClick = onMouseClick;
@@ -28,7 +28,7 @@ namespace React.Core
         }
 
         public string Text { get; }
-        public Action<TextClickEvent> OnMouseClick { get; }
+        public Action<TextLeftMouseUpEvent> OnMouseClick { get; }
         public TextuallyPositionedChild[] Children { get; }
     }
     
