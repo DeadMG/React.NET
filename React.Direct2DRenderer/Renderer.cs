@@ -27,7 +27,7 @@ namespace React.DirectRenderer
 
         private IElementState state;
 
-        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, IComponentContext initialContext)
+        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, IComponentContext initialContext, IEventLevel eventSource)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
@@ -50,13 +50,13 @@ namespace React.DirectRenderer
             d2dTarget = new RenderTarget(d2dFactory, backBufferSurface, properties);
             
             fontFactory = new SharpDX.DirectWrite.Factory();
-            RenderTree(renderable, b, initialContext);
+            RenderTree(renderable, b, initialContext, eventSource);
         }
         
-        public void RenderTree(IElement renderable, Bounds bounds, IComponentContext o)
+        public void RenderTree(IElement renderable, Bounds bounds, IComponentContext o, IEventLevel eventSource)
         {
             if (renderable == null) throw new InvalidOperationException();
-            state = renderable.Update(state, new UpdateContext(bounds, this, o));
+            state = renderable.Update(state, new UpdateContext(bounds, this, o, eventSource));
         }
 
         public void RenderFrame()
@@ -84,29 +84,23 @@ namespace React.DirectRenderer
             foreach (var disposable in disposables)
                 disposable.Dispose();
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
+        
+        public IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement t, IComponentContext o, IEventLevel eventSource)
         {
-            if (state.BoundingBox.IsInBounds(click))
-                state.OnMouseClick(click);
+            existing?.Dispose();
+            return new TextElementState(t, b, this, o, eventSource);
         }
 
-        public IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement t, IComponentContext o)
+        public IElementState UpdateSolidColourElementState(IElementState existing, Bounds b1, SolidColourElement b2, IComponentContext o, IEventLevel eventSource)
         {
-            return new TextElementState(t, b, this, o);
-        }
-
-        public IElementState UpdateSolidColourElementState(IElementState existing, Bounds b1, SolidColourElement b2, IComponentContext o)
-        {
-            var context = new UpdateContext(b1, this, o);
+            var context = new UpdateContext(b1, this, o, eventSource);
             var existingBackground = existing as SolidColourElementState;
             if (existingBackground == null)
             {
                 existing?.Dispose();
-                return new SolidColourElementState(b2, context);
+                return new SolidColourElementState(null, b2, context);
             }
-            existingBackground.Update(b2, context);
-            return existingBackground;
+            return new SolidColourElementState(existingBackground, b2, context);
         }
 
         public static Renderer AssertRendererType(IRenderer renderer)

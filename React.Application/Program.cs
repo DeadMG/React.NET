@@ -20,18 +20,12 @@ namespace React.Application
                 renderForm.ClientSize = new System.Drawing.Size(1280, 720);
                 renderForm.AllowUserResizing = false;
                 var bounds = new Bounds(x: 0, y: 0, width: 1280, height: 720);
+                var eventSource = new RawInputEventSource(() => renderForm.PointToClient(Cursor.Position));
                 
-                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds, null))
+                using (var renderer = new Renderer(renderForm.Handle, RootComponent.CreateElement(null), bounds, null, eventSource.Root))
                 {
                     Device.RegisterDevice(SharpDX.Multimedia.UsagePage.Generic, SharpDX.Multimedia.UsageId.GenericMouse, DeviceFlags.None);
-                    Device.MouseInput += (object sender, MouseInputEventArgs e) =>
-                    {
-                        var location = renderForm.PointToClient(Cursor.Position);
-                        if (e.ButtonFlags == MouseButtonFlags.LeftButtonUp)
-                        {
-                            renderer.OnMouseClick(new LeftMouseUpEvent(location.X, location.Y));
-                        }
-                    };
+
                     RenderLoop.Run(renderForm, () =>
                     {
                         renderer.RenderFrame();

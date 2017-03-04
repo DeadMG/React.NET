@@ -4,57 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using React.Core;
+using React.Box;
 
 namespace React.DirectRenderer
 {
-    public class SolidColourElementState : IElementState
+    public class SolidColourElementState : PrimitiveElementState
     {
-        private SharpDX.Direct2D1.SolidColorBrush brush;
-        private Action<LeftMouseUpEvent> onMouseClick;
-        private Bounds boundingBox;
+        private readonly SharpDX.Direct2D1.SolidColorBrush brush;
+        private readonly Bounds boundingBox;
 
-        public SolidColourElementState(SolidColourElement other, UpdateContext context)
+        public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, UpdateContext context)
+            : base(existing, other.Props, context)
         {
-            brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
+            brush = existing?.brush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
                 R = other.Props.Colour.R,
                 G = other.Props.Colour.G,
                 B = other.Props.Colour.B,
                 A = other.Props.Colour.A
             });
-            onMouseClick = other.Props.OnMouseClick;
             boundingBox = other.Props.Location != null ? other.Props.Location(context.Bounds) : context.Bounds;
         }
 
-        public Bounds BoundingBox => boundingBox;
+        public override Bounds BoundingBox => boundingBox;
 
-        public void Dispose()
+        public override void Dispose()
         {
             brush.Dispose();
+            base.Dispose();
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-            onMouseClick?.Invoke(click);
-        }
-
-        public void Render(IRenderer r)
+        
+        public override void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);
-        }
-
-        public void Update(SolidColourElement other, UpdateContext context)
-        {
-            brush.Dispose();
-            brush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
-            {
-                R = other.Props.Colour.R,
-                G = other.Props.Colour.G,
-                B = other.Props.Colour.B,
-                A = other.Props.Colour.A
-            });
-            onMouseClick = other.Props.OnMouseClick;
-            boundingBox = other.Props.Location(context.Bounds);
         }
     }
 }

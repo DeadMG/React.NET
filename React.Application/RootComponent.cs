@@ -24,20 +24,20 @@ namespace React.Application
 
         public override IElement Render()
         {
-            return new BackgroundElement(new BackgroundElementProps { Colour = new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f) },
+            return new BackgroundElement(new BackgroundElementProps(new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f)),
                 this.State.Clicked ? new StretchElement(this.RenderContents()) : this.RenderContents());
         }
 
         private IElement RenderContents()
         {
-            return new Line(LineDirection.Vertical,
+            return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("DirectReact Sample")),
                 MenuComponent.CreateElement(null),
-                new Line(LineDirection.Horizontal,
+                new Line(new LineProps(LineDirection.Horizontal),
                     ProjectViewerComponent.CreateElement(null),
-                    new Line(LineDirection.Horizontal,
+                    new Line(new LineProps(LineDirection.Horizontal),
                         new TextElement(new TextElementProps("Clicked:")),
-                        new TextElement(new TextElementProps(this.State.Clicked.ToString(), onMouseClick: click => this.State = new RootComponentState { Clicked = !this.State.Clicked, Selection = this.State.Selection })),
+                        new TextElement(new TextElementProps(this.State.Clicked.ToString(), onMouse: this.TextClicked)),
                         this.RenderRandomBox())));
         }
 
@@ -45,6 +45,14 @@ namespace React.Application
         {
             var selection = State.Clicked ? new[] { this.State.Selection } : null;
             return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: selection, onSelectionChange: sel => this.State = new RootComponentState { Clicked = this.State.Clicked, Selection = sel[0] }));
+        }
+
+        private void TextClicked(TextMouseEvent mouse, Bounds bounds)
+        {
+            if (mouse.OriginalState.Mouse.LeftButtonDown && !mouse.NewState.Mouse.LeftButtonDown && bounds.IsInBounds(mouse.NewState.Mouse))
+            {
+                this.State = new RootComponentState { Clicked = !this.State.Clicked, Selection = this.State.Selection };
+            }
         }
     }
 }

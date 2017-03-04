@@ -7,88 +7,65 @@ using React.Core;
 
 namespace React.Box
 {
-    public class Line : Element<LineState, Line>
+    public class LineProps : PrimitiveProps
     {
-        public Line(LineDirection direction, params IElement[] children)
+        public LineProps(LineDirection direction, Action<MouseEvent, Bounds> onMouse = null)
+            : base(onMouse)
         {
-            this.Children = children;
             this.Direction = direction;
         }
 
-        public IElement[] Children { get; }
         public LineDirection Direction { get; }
-        public Action<LeftMouseUpEvent> OnMouseClick { get; set; }
     }
 
-    public class LineState : IUpdatableElementState<Line>
+    public class Line : Element<LineState, Line>
     {
-        private List<IElementState> nestedElementStates;
-        private Action<LeftMouseUpEvent> onMouseClick;
-
-        public LineState(Line e, UpdateContext context)
+        public Line(LineProps props, params IElement[] children)
         {
-            var originalBounds = context.Bounds;
-            nestedElementStates = new List<IElementState>();
-            var b = originalBounds;
-            foreach (var child in e.Children)
-            {
-                var newState = child?.Update(null, new UpdateContext(b, context.Renderer, context.Context));
-                nestedElementStates.Add(newState);
-                if (newState != null) b = b.Remaining(e.Direction, newState.BoundingBox);
-            }
-            BoundingBox = originalBounds.Sum(e.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
-            onMouseClick = e.OnMouseClick;
+            if (props == null) throw new InvalidOperationException();
+            this.Children = children;
+            this.Props = props;
         }
 
-        public void Update(Line other, UpdateContext context)
+        public IElement[] Children { get; }
+        public LineProps Props { get; }
+    }
+
+    public class LineState : PrimitiveElementState
+    {
+        private readonly List<IElementState> nestedElementStates;
+        private readonly IEventLevel nestedEventLevel;
+
+        public LineState(LineState existing, Line e, UpdateContext context)
+            : base(existing, e.Props, context)
         {
-            var originalBounds = context.Bounds;
-            var b = context.Bounds;
-            var newStates = new List<IElementState>();
-            for (int i = 0; i < Math.Max(nestedElementStates.Count, other.Children.Length); ++i)
+            nestedEventLevel = context.EventSource.CreateNestedEventLevel();
+            var bounds = context.Bounds;
+            nestedElementStates = e.Children.Select((elem, index) =>
             {
-                if (i >= other.Children.Length)
-                {
-                    nestedElementStates[i]?.Dispose();
-                    continue;
-                }
-                IElementState existingState = i >= nestedElementStates.Count ? null : nestedElementStates[i];
-                var newState = other.Children[i]?.Update(existingState, new UpdateContext(b, context.Renderer, context.Context));
-                newStates.Add(newState);
-                if (newState != null) b = b.Remaining(other.Direction, newState.BoundingBox);
-            }
-            nestedElementStates = newStates;
-            BoundingBox = originalBounds.Sum(other.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
-            onMouseClick = other.OnMouseClick;
+                var result = elem?.Update(existing?.nestedElementStates?[index], new UpdateContext(bounds, context.Renderer, context.Context, nestedEventLevel));
+                if (result != null) bounds = bounds.Remaining(e.Props.Direction, result.BoundingBox);
+                return result;
+            }).ToList();
+            BoundingBox = context.Bounds.Sum(e.Props.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
+        }
+        
+        public override Bounds BoundingBox { get; }
+
+        public override void Dispose()
+        {
+            foreach (var state in nestedElementStates)
+                state?.Dispose();
+            nestedEventLevel.Dispose();
+            base.Dispose();
         }
 
-        public Bounds BoundingBox { get; private set; }
-
-        public void Dispose()
+        public override void Render(IRenderer r)
         {
-            foreach (var state in nestedElementStates.Where(p => p != null))
-                state.Dispose();
-        }
-
-        public void Render(IRenderer r)
-        {
-            foreach (var element in nestedElementStates.Where(p => p != null))
+            foreach (var element in nestedElementStates)
             {
-                element.Render(r);
+                element?.Render(r);
             }
-        }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-            foreach (var child in nestedElementStates.Where(p => p != null))
-            {
-                if (child.BoundingBox.IsInBounds(click))
-                {
-                    child.OnMouseClick(click);
-                    break;
-                }
-            }
-            onMouseClick?.Invoke(click);
         }
     }
 }

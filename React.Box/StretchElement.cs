@@ -17,13 +17,13 @@ namespace React.Box
         public IElement Child { get; }
     }
 
-    public class StretchElementState : IUpdatableElementState<StretchElement>
+    public class StretchElementState : IElementState
     {
         private IElementState nestedState;
 
-        public StretchElementState(StretchElement element, UpdateContext context)
+        public StretchElementState(StretchElementState existing, StretchElement element, UpdateContext context)
         {
-            nestedState = element.Child.Update(null, context);
+            nestedState = element.Child.Update(existing?.nestedState, context);
             BoundingBox = context.Bounds;
         }
 
@@ -33,22 +33,10 @@ namespace React.Box
         {
             nestedState.Dispose();
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-            if (nestedState.BoundingBox.IsInBounds(click))
-                nestedState.OnMouseClick(click);
-        }
-
+        
         public void Render(IRenderer r)
         {
             nestedState.Render(r);
-        }
-
-        public void Update(StretchElement other, UpdateContext context)
-        {
-            BoundingBox = context.Bounds;
-            nestedState = other.Child.Update(nestedState, context);
         }
     }
 }

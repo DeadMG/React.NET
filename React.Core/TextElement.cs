@@ -20,30 +20,30 @@ namespace React.Core
 
     public class TextElementProps
     {
-        public TextElementProps(string text, TextuallyPositionedChild[] children = null, Action<TextLeftMouseUpEvent> onMouseClick = null)
+        public TextElementProps(string text, Action<TextMouseEvent, Bounds> onMouse = null)
         {
             this.Text = text;
-            this.OnMouseClick = onMouseClick;
-            this.Children = children ?? new TextuallyPositionedChild[0];
+            this.OnMouse = onMouse;
         }
 
         public string Text { get; }
-        public Action<TextLeftMouseUpEvent> OnMouseClick { get; }
-        public TextuallyPositionedChild[] Children { get; }
+        public Action<TextMouseEvent, Bounds> OnMouse { get; }
     }
     
     public class TextElement : IElement
     {
-        public TextElement(TextElementProps props)
+        public TextElement(TextElementProps props, params TextuallyPositionedChild[] children)
         {
             this.Props = props;
+            this.Children = children ?? new TextuallyPositionedChild[0];
         }
 
         public IElementState Update(IElementState existing, UpdateContext context)
         {
-            return context.Renderer.UpdateTextElementState(existing, context.Bounds, this, context.Context);
+            return context.Renderer.UpdateTextElementState(existing, context.Bounds, this, context.Context, context.EventSource);
         }
 
+        public TextuallyPositionedChild[] Children { get; }
         public TextElementProps Props { get; }
     }
 }

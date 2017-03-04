@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IUpdatableElementState<E> : IElementState
-        where E : IElement
+    public class KeyboardEvent
     {
-        void Update(E other, UpdateContext context);
     }
 }

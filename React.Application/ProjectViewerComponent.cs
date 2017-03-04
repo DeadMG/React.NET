@@ -13,7 +13,7 @@ namespace React.Application
     {
         public override IElement Render()
         {
-            return new Line(LineDirection.Vertical,
+            return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("File1")),
                 new TextElement(new TextElementProps("File2")));
         }

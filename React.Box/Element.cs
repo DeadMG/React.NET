@@ -9,22 +9,17 @@ namespace React.Box
 {
     public abstract class Element<S, E> : IElement
         where E : Element<S, E>
-        where S : class, IUpdatableElementState<E>
+        where S : class, IElementState
     {
         public IElementState Update(IElementState existing, UpdateContext context)
         {
-            if (existing == null)
-            {
-                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(UpdateContext) }).Invoke(new object[] { (E)this, context });
-            }
             var existingOfType = existing as S;
             if (existingOfType == null)
             {
-                existing.Dispose();
-                return (S)typeof(S).GetConstructor(new Type[] { typeof(E), typeof(UpdateContext) }).Invoke(new object[] { (E)this, context });
+                existing?.Dispose();
+                return (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(UpdateContext) }).Invoke(new object[] { null, (E)this, context });
             }
-            existingOfType.Update((E)this, context);
-            return existingOfType;
+            return (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(UpdateContext) }).Invoke(new object[] { existingOfType, (E)this, context });
         }
     }
 }

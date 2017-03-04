@@ -49,6 +49,7 @@
     <Compile Include="Line.cs" />
     <Compile Include="LineDirection.cs" />
     <Compile Include="OverlayElement.cs" />
+    <Compile Include="PrimitiveElementState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StretchElement.cs" />
     <Compile Include="ControlledTextBoxElement.cs" />

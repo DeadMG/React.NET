@@ -28,11 +28,7 @@ namespace React.Box
         public void Dispose()
         {
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-        }
-
+        
         public void Render(IRenderer r)
         {
         }

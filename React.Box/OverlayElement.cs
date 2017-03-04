@@ -29,15 +29,15 @@ namespace React.Box
         public OverlayElementProps Props { get; }
     }
 
-    public class OverlayElementState : IUpdatableElementState<OverlayElement>
+    public class OverlayElementState : IElementState
     {
         private IElementState child;
         private IElementState overlay;
 
-        public OverlayElementState(OverlayElement element, UpdateContext context)
+        public OverlayElementState(OverlayElementState existing, OverlayElement element, UpdateContext context)
         {
-            child = element.Props.Child.Update(null, context);
-            overlay = element.Props.Overlay.Update(null, context);
+            child = element.Props.Child.Update(existing?.child, context);
+            overlay = element.Props.Overlay.Update(existing?.overlay, context);
         }
 
         public Bounds BoundingBox => child.BoundingBox;
@@ -47,22 +47,11 @@ namespace React.Box
             child?.Dispose();
             overlay?.Dispose();
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-            child.OnMouseClick(click);
-        }
-
+        
         public void Render(IRenderer r)
         {
             child?.Render(r);
             overlay?.Render(r);
-        }
-
-        public void Update(OverlayElement other, UpdateContext context)
-        {
-            child = other.Props.Child.Update(child, context);
-            overlay = other.Props.Overlay.Update(overlay, context);
         }
     }
 }

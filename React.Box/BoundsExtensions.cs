@@ -9,7 +9,7 @@ namespace React.Box
 {
     public static class BoundsExtensions
     {
-        public static bool IsInBounds(this Bounds area, IPositionedEvent location)
+        public static bool IsInBounds(this Bounds area, MouseState location)
         {
             return area.X < location.X && (area.X + area.Width) > location.X && area.Y < location.Y && (area.Y + area.Height) > location.Y;
         }

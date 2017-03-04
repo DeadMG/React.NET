@@ -18,7 +18,7 @@ namespace React.Box
         public P Props { get; }
     }
 
-    public class ClassComponentElementState<P, C> : IUpdatableElementState<ClassComponentElement<P, C>>
+    public class ClassComponentElementState<P, C> : IElementState
         where C : Component<P, C>
     {
         private static C CreateInstance(P currentProps)
@@ -41,12 +41,13 @@ namespace React.Box
 
         private UpdateContext latestContext;
 
-        public ClassComponentElementState(ClassComponentElement<P, C> parent, UpdateContext context)
+        public ClassComponentElementState(ClassComponentElementState<P, C> existing, ClassComponentElement<P, C> parent, UpdateContext context)
         {
-            ComponentInstance = CreateInstance(parent.Props);
+            ComponentInstance = existing?.ComponentInstance ?? CreateInstance(parent.Props);
             ComponentInstance.Context = context.Context;
             ComponentInstance.CreatingElementState = this;
-            RenderResult = ComponentInstance.Render().Update(RenderResult, context);
+            ComponentInstance.Props = parent.Props;
+            RenderResult = ComponentInstance.Render().Update(existing?.RenderResult, context);
             latestContext = context;
         }
 
@@ -54,35 +55,18 @@ namespace React.Box
         {
             RenderResult = ComponentInstance.Render().Update(RenderResult, latestContext);
         }
-
-        public void Update(ClassComponentElement<P, C> parent, UpdateContext context)
-        {
-            latestContext = context;
-            ComponentInstance.Props = parent.Props;
-            ComponentInstance.Context = context.Context;
-            RenderResult = ComponentInstance.Render().Update(RenderResult, context);
-        }
-
+        
         public void Dispose()
         {
-            var disposable = ComponentInstance as IDisposable;
-            if (disposable != null)
-            {
-                disposable.Dispose();
-            }
+            (ComponentInstance as IDisposable)?.Dispose();
             RenderResult.Dispose();
         }
         
         public void Render(IRenderer r)
         {
-            RenderResult.Render(r);
+            RenderResult?.Render(r);
         }
-
-        public void OnMouseClick(LeftMouseUpEvent click)
-        {
-            RenderResult.OnMouseClick(click);
-        }
-
+        
         public readonly C ComponentInstance;
         public IElementState RenderResult;
         public Bounds BoundingBox => RenderResult.BoundingBox;

@@ -13,7 +13,7 @@ namespace React.Application
     {
         public override IElement Render()
         {
-            return new Line(LineDirection.Horizontal,
+            return new Line(new LineProps(LineDirection.Horizontal),
                 MenuItemComponent.CreateElement(new MenuItemProps { Name = "File" }),
                 MenuItemComponent.CreateElement(new MenuItemProps { Name = "Edit" }));
         }
