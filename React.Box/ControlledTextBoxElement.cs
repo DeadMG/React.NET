@@ -30,10 +30,15 @@ namespace React.Box
         public TextSelection[] Selection { get; }
     }
 
-    public class ControlledTextBox : Component<ControlledTextBoxProps, ControlledTextBox>
+    public class ControlledTextBoxState
+    {
+        public int? SelectionStartTextIndex { get; set; }
+    }
+
+    public class ControlledTextBox : Component<ControlledTextBoxProps, ControlledTextBoxState, ControlledTextBox>
     {
         public ControlledTextBox(ControlledTextBoxProps props) 
-            : base(props)
+            : base(props, new ControlledTextBoxState { SelectionStartTextIndex = null })
         {
         }
 
@@ -52,7 +57,14 @@ namespace React.Box
         {
             if (!clickEvent.OriginalState.TextIndex.HasValue || !clickEvent.NewState.TextIndex.HasValue) return;
             if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown)
-                Props.OnSelectionChange?.Invoke(new[] { new TextSelection(0, clickEvent.NewState.TextIndex.Value) });
+            {
+                this.State = new ControlledTextBoxState { SelectionStartTextIndex = clickEvent.NewState.TextIndex.Value };
+                Props.OnSelectionChange?.Invoke(new[] { new TextSelection(clickEvent.NewState.TextIndex.Value, clickEvent.NewState.TextIndex.Value) });
+            }
+            if (clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && this.State.SelectionStartTextIndex.HasValue)
+            {
+                Props.OnSelectionChange?.Invoke(new[] { new TextSelection(Math.Min(this.State.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value), Math.Max(this.State.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value)) });
+            }
         }
 
         private IElement RenderUnselectedText()
