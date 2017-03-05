@@ -44,18 +44,20 @@ namespace React.Box
 
         public override IElement Render()
         {
-            var selection = this.Props.Selection;
-            if (selection.Length == 0)
-            {
-                return new TextElement(new TextElementProps(this.Props.Text, onMouse: this.OnTextClick));
-            }
             return new TextElement(new TextElementProps(text: this.Props.Text, onMouse: this.OnTextClick),
                 Props.Selection.Select(p => RenderSelection(p)).ToArray());
         }
 
         private void OnTextClick(TextMouseEvent clickEvent, Bounds bounds)
         {
-            if (!clickEvent.OriginalState.TextIndex.HasValue || !clickEvent.NewState.TextIndex.HasValue) return;
+            if (!clickEvent.OriginalState.TextIndex.HasValue || !clickEvent.NewState.TextIndex.HasValue)
+            {
+                if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && this.Props.Selection.Length != 0)
+                {
+                    this.Props.OnSelectionChange(new TextSelection[] { });
+                }
+                return;
+            }
             if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown)
             {
                 this.State = new ControlledTextBoxState { SelectionStartTextIndex = clickEvent.NewState.TextIndex.Value };

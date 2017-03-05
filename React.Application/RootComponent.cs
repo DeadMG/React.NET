@@ -13,12 +13,12 @@ namespace React.Application
     public class RootComponentState
     {
         public bool Clicked { get; set; }
-        public TextSelection Selection { get; set; }
+        public TextSelection[] Selection { get; set; }
     }
 
     public class RootComponent : Component<EmptyProps, RootComponentState, RootComponent>
     {
-        public RootComponent(EmptyProps props) : base(props, new RootComponentState { Clicked = false, Selection = new TextSelection(2, 2) })
+        public RootComponent(EmptyProps props) : base(props, new RootComponentState { Clicked = false, Selection = new TextSelection[] { new TextSelection(2, 2) } })
         {
         }
 
@@ -43,8 +43,7 @@ namespace React.Application
 
         private IElement RenderRandomBox()
         {
-            var selection = State.Clicked ? new[] { this.State.Selection } : null;
-            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: selection, onSelectionChange: sel => this.State = new RootComponentState { Clicked = this.State.Clicked, Selection = sel[0] }));
+            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: this.State.Selection, onSelectionChange: sel => this.State = new RootComponentState { Clicked = this.State.Clicked, Selection = sel }));
         }
 
         private void TextClicked(TextMouseEvent mouse, Bounds bounds)
