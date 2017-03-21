@@ -20,7 +20,7 @@ namespace React.Core
         public bool LeftButtonDown { get; }
     }
 
-    public class MouseEvent
+    public class MouseEvent : IEvent<MouseState>
     {
         public MouseEvent(MouseState originalState, MouseState newState)
         {

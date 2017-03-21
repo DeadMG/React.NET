@@ -38,9 +38,9 @@ namespace React.Core
             this.Children = children ?? new TextuallyPositionedChild[0];
         }
 
-        public IElementState Update(IElementState existing, UpdateContext context)
+        public IElementState Update(IElementState existing, RenderContext context)
         {
-            return context.Renderer.UpdateTextElementState(existing, context.Bounds, this, context.Context, context.EventSource);
+            return context.Renderer.UpdateTextElementState(existing, this, context);
         }
 
         public TextuallyPositionedChild[] Children { get; }

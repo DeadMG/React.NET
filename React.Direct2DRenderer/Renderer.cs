@@ -15,19 +15,41 @@ namespace React.DirectRenderer
 {
     public class Renderer : IDisposable, IRenderer
     {
-        public readonly SharpDX.Direct3D11.RenderTargetView renderTargetView;
+        public SharpDX.Direct3D11.RenderTargetView renderTargetView;
         public readonly SharpDX.Direct3D11.Device device;
         public readonly SharpDX.Direct3D11.DeviceContext1 context;
-        public readonly SharpDX.Direct3D11.Texture2D backBuffer;
+        public SharpDX.Direct3D11.Texture2D backBuffer;
         public readonly SharpDX.DXGI.SwapChain swapChain;
-        public readonly SharpDX.DXGI.Surface backBufferSurface;
-        public readonly SharpDX.Direct2D1.RenderTarget d2dTarget;
+        public SharpDX.DXGI.Surface backBufferSurface;
+        public SharpDX.Direct2D1.RenderTarget d2dTarget;
         public readonly SharpDX.DirectWrite.Factory fontFactory;
         public readonly SharpDX.Direct2D1.Factory d2dFactory;
 
-        private IElementState state;
+        private Bounds currentBounds;
 
-        public Renderer(IntPtr outputHandle, IElement renderable, Bounds b, IComponentContext initialContext, IEventLevel eventSource)
+        private void InitSwapchain()
+        {
+            backBuffer = swapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0);
+            renderTargetView = new SharpDX.Direct3D11.RenderTargetView(device, backBuffer);
+            backBufferSurface = swapChain.GetBackBuffer<Surface>(0);
+            var properties = new RenderTargetProperties(new PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied));
+            d2dTarget = new RenderTarget(d2dFactory, backBufferSurface, properties);
+        }
+        
+        public void Resize(Bounds bounds)
+        {
+            currentBounds = bounds;
+            backBuffer?.Dispose();
+            backBufferSurface?.Dispose();
+            renderTargetView?.Dispose();
+            d2dTarget?.Dispose();
+
+            swapChain.ResizeBuffers(2, bounds.Width, bounds.Height, Format.R8G8B8A8_UNorm, SwapChainFlags.None);
+
+            InitSwapchain();
+        }
+
+        public Renderer(IntPtr outputHandle, Bounds b)
         {
             SwapChainDescription description = new SwapChainDescription()
             {
@@ -41,39 +63,27 @@ namespace React.DirectRenderer
             };
             SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport, description, out device, out swapChain);
             context = device.ImmediateContext.QueryInterface<SharpDX.Direct3D11.DeviceContext1>();
-            backBuffer = swapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0);
-            renderTargetView = new SharpDX.Direct3D11.RenderTargetView(device, backBuffer);
-            
-            backBufferSurface = swapChain.GetBackBuffer<Surface>(0);
             d2dFactory = new SharpDX.Direct2D1.Factory();
-            var properties = new RenderTargetProperties(new PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied));
-            d2dTarget = new RenderTarget(d2dFactory, backBufferSurface, properties);
-            
             fontFactory = new SharpDX.DirectWrite.Factory();
-            RenderTree(renderable, b, initialContext, eventSource);
-        }
-        
-        public void RenderTree(IElement renderable, Bounds bounds, IComponentContext o, IEventLevel eventSource)
-        {
-            if (renderable == null) throw new InvalidOperationException();
-            state = renderable.Update(state, new UpdateContext(bounds, this, o, eventSource));
+            
+            Resize(b);
         }
 
-        public void RenderFrame()
+        public void RenderFrame(IElementState root)
         {
             context.Rasterizer.SetViewport(new SharpDX.Mathematics.Interop.RawViewportF
             {
-                Height = 720,
-                Width = 1280,
-                X = 0,
-                Y = 0,
+                Height = currentBounds.Height,
+                Width = currentBounds.Width,
+                X = currentBounds.X,
+                Y = currentBounds.Y,
                 MinDepth = 0,
                 MaxDepth = 1
             });
             context.OutputMerger.SetRenderTargets(renderTargetView);
             context.ClearRenderTargetView(renderTargetView, new SharpDX.Mathematics.Interop.RawColor4(32 / 255f, 103 / 255f, 178 / 255f, 1f));
             d2dTarget.BeginDraw();
-            state.Render(this);
+            root.Render(this);
             d2dTarget.EndDraw();
             swapChain.Present(1, PresentFlags.None);
         }
@@ -85,22 +95,14 @@ namespace React.DirectRenderer
                 disposable.Dispose();
         }
         
-        public IElementState UpdateTextElementState(IElementState existing, Bounds b, TextElement t, IComponentContext o, IEventLevel eventSource)
+        public IElementState UpdateTextElementState(IElementState existing, TextElement t, RenderContext context)
         {
-            existing?.Dispose();
-            return new TextElementState(t, b, this, o, eventSource);
+            return new TextElementState(existing as TextElementState, t, context);
         }
 
-        public IElementState UpdateSolidColourElementState(IElementState existing, Bounds b1, SolidColourElement b2, IComponentContext o, IEventLevel eventSource)
+        public IElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement b2, RenderContext context)
         {
-            var context = new UpdateContext(b1, this, o, eventSource);
-            var existingBackground = existing as SolidColourElementState;
-            if (existingBackground == null)
-            {
-                existing?.Dispose();
-                return new SolidColourElementState(null, b2, context);
-            }
-            return new SolidColourElementState(existingBackground, b2, context);
+            return new SolidColourElementState(existing as SolidColourElementState, b2, context);
         }
 
         public static Renderer AssertRendererType(IRenderer renderer)

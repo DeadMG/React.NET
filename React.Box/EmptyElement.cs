@@ -9,9 +9,8 @@ namespace React.Box
 {
     public class EmptyElement : IElement
     {
-        public IElementState Update(IElementState existing, UpdateContext context)
+        public IElementState Update(IElementState existing, RenderContext context)
         {
-            existing?.Dispose();
             return new EmptyElementState(context.Bounds);
         }
     }
@@ -24,11 +23,7 @@ namespace React.Box
         }
 
         public Bounds BoundingBox { get; set; }
-
-        public void Dispose()
-        {
-        }
-        
+                
         public void Render(IRenderer r)
         {
         }

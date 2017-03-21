@@ -14,27 +14,20 @@ namespace React.DirectRenderer
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
-        private readonly Action<TextMouseEvent, Bounds> onMouse;
         private readonly List<IElementState> children;
-        private readonly IEventLevel eventSource;
-        private readonly IEventLevel childEventLevel;
 
-        public TextElementState(TextElement element, Bounds b, IRenderer r, IComponentContext o, IEventLevel eventSource)
+        public TextElementState(TextElementState existing, TextElement element, RenderContext context)
         {
-            if (element.Props.OnMouse != null)
-            {
-                this.eventSource = eventSource;
-                onMouse = element.Props.OnMouse;
-                eventSource.Mouse += OnMouse;
-            }
-
             text = element.Props.Text;
-            format = new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(r).fontFactory, "Times New Roman", 18);
-            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(r).fontFactory, element.Props.Text, format, b.Width, b.Height);
-            textBrush = new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(r).d2dTarget, new RawColor4(1, 1, 1, 1));
-            BoundingBox = new Bounds(x: b.X, y: b.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
+            format = existing?.format ?? new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(context.Renderer).fontFactory, "Times New Roman", 18);
+            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(context.Renderer).fontFactory, element.Props.Text, format, context.Bounds.Width, context.Bounds.Height);
+            textBrush = existing?.textBrush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new RawColor4(1, 1, 1, 1));
+            BoundingBox = new Bounds(x: context.Bounds.X, y: context.Bounds.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
 
-            childEventLevel = eventSource.CreateNestedEventLevel();
+            context.Disposables.Add(format);
+            context.Disposables.Add(layout);
+            context.Disposables.Add(textBrush);
+
             var childStates = new List<IElementState>();
             foreach(var child in element.Children)
             {
@@ -44,29 +37,18 @@ namespace React.DirectRenderer
                     continue;
                 }
                 var location = locations[0];
-                childStates.Add(child.Child.Update(null, new UpdateContext(new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height), r, o, childEventLevel)));
+                childStates.Add(child.Child.Update(null, context.WithBounds(new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height))));
             }
             children = childStates;
+
+            foreach(var mouseEvent in context.Events.OfType<MouseEvent>())
+            {
+                element.Props.OnMouse?.Invoke(new TextMouseEvent(new TextMouseState(mouseEvent.OriginalState, GetTextIndex(mouseEvent.OriginalState)), new TextMouseState(mouseEvent.NewState, GetTextIndex(mouseEvent.NewState))), BoundingBox);
+            }
         }
 
         public Bounds BoundingBox { get; }
-                
-        public void Dispose()
-        {
-            format.Dispose();
-            layout.Dispose();
-            textBrush.Dispose();
-            foreach (var child in children)
-                child.Dispose();
-            if (eventSource != null) eventSource.Mouse -= OnMouse;
-            childEventLevel.Dispose();
-        }
-
-        private void OnMouse(MouseEvent click)
-        {
-            onMouse?.Invoke(new TextMouseEvent(new TextMouseState(click.OriginalState, GetTextIndex(click.OriginalState)), new TextMouseState(click.NewState, GetTextIndex(click.NewState))), BoundingBox);
-        }
-
+        
         private int? GetTextIndex(MouseState state)
         {
             RawBool isTrailing;

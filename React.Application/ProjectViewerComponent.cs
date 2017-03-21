@@ -9,9 +9,9 @@ using React.Box;
 
 namespace React.Application
 {
-    public class ProjectViewerComponent : Component<ProjectViewerComponent>
+    public class ProjectViewerComponent : StatelessComponent<ProjectViewerComponent>
     {
-        public override IElement Render()
+        public override IElement Render(StatelessComponentRenderContext<EmptyProps> context)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("File1")),

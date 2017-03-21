@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IElementState : IDisposable
+    public interface IElementState
     {
         void Render(IRenderer r);
         Bounds BoundingBox { get; }

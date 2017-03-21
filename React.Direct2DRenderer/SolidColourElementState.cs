@@ -8,13 +8,12 @@ using React.Box;
 
 namespace React.DirectRenderer
 {
-    public class SolidColourElementState : PrimitiveElementState
+    public class SolidColourElementState : IElementState
     {
         private readonly SharpDX.Direct2D1.SolidColorBrush brush;
         private readonly Bounds boundingBox;
 
-        public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, UpdateContext context)
-            : base(existing, other.Props, context)
+        public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, RenderContext context)
         {
             brush = existing?.brush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
@@ -23,18 +22,13 @@ namespace React.DirectRenderer
                 B = other.Props.Colour.B,
                 A = other.Props.Colour.A
             });
+            context.Disposables.Add(brush);
             boundingBox = other.Props.Location != null ? other.Props.Location(context.Bounds) : context.Bounds;
         }
 
-        public override Bounds BoundingBox => boundingBox;
-
-        public override void Dispose()
-        {
-            brush.Dispose();
-            base.Dispose();
-        }
-        
-        public override void Render(IRenderer r)
+        public Bounds BoundingBox => boundingBox;
+                
+        public void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);
         }

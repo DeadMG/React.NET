@@ -31,23 +31,17 @@ namespace React.Box
 
     public class OverlayElementState : IElementState
     {
-        private IElementState child;
-        private IElementState overlay;
+        private readonly IElementState child;
+        private readonly IElementState overlay;
 
-        public OverlayElementState(OverlayElementState existing, OverlayElement element, UpdateContext context)
+        public OverlayElementState(OverlayElementState existing, OverlayElement element, RenderContext context)
         {
             child = element.Props.Child.Update(existing?.child, context);
             overlay = element.Props.Overlay.Update(existing?.overlay, context);
         }
 
         public Bounds BoundingBox => child.BoundingBox;
-
-        public void Dispose()
-        {
-            child?.Dispose();
-            overlay?.Dispose();
-        }
-        
+                
         public void Render(IRenderer r)
         {
             child?.Render(r);

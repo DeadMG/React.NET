@@ -19,21 +19,16 @@ namespace React.Box
 
     public class StretchElementState : IElementState
     {
-        private IElementState nestedState;
+        private readonly IElementState nestedState;
 
-        public StretchElementState(StretchElementState existing, StretchElement element, UpdateContext context)
+        public StretchElementState(StretchElementState existing, StretchElement element, RenderContext context)
         {
             nestedState = element.Child.Update(existing?.nestedState, context);
             BoundingBox = context.Bounds;
         }
 
         public Bounds BoundingBox { get; set; }
-
-        public void Dispose()
-        {
-            nestedState.Dispose();
-        }
-        
+                
         public void Render(IRenderer r)
         {
             nestedState.Render(r);

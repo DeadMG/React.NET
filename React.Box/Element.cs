@@ -11,15 +11,14 @@ namespace React.Box
         where E : Element<S, E>
         where S : class, IElementState
     {
-        public IElementState Update(IElementState existing, UpdateContext context)
+        public IElementState Update(IElementState existing, RenderContext context)
         {
-            var existingOfType = existing as S;
-            if (existingOfType == null)
+            var result = (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(RenderContext) }).Invoke(new object[] { existing as S, (E)this, context });
+            if (result is IDisposable)
             {
-                existing?.Dispose();
-                return (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(UpdateContext) }).Invoke(new object[] { null, (E)this, context });
+                context.Disposables.Add(result as IDisposable);
             }
-            return (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(UpdateContext) }).Invoke(new object[] { existingOfType, (E)this, context });
+            return result;
         }
     }
 }

@@ -9,8 +9,8 @@ namespace React.Box
 {
     public class ControlledTextBoxProps : PrimitiveProps
     {
-        public ControlledTextBoxProps(string text, Action<string> onTextChange = null, Action<TextSelection[]> onSelectionChange = null, TextSelection[] selection = null, Action<MouseEvent, Bounds> onMouse = null)
-            : base(onMouse)
+        public ControlledTextBoxProps(string text, Action<string> onTextChange = null, Action<TextSelection[]> onSelectionChange = null, TextSelection[] selection = null, Action<MouseEvent, Bounds> onMouse = null, Action<KeyboardEvent> onKeyboard = null)
+            : base(onMouse, onKeyboard)
         {
             this.OnTextChange = onTextChange;
             this.OnSelectionChange = onSelectionChange;
@@ -35,43 +35,39 @@ namespace React.Box
         public int? SelectionStartTextIndex { get; set; }
     }
 
-    public class ControlledTextBox : Component<ControlledTextBoxProps, ControlledTextBoxState, ControlledTextBox>
+    public class ControlledTextBox : StatefulComponent<ControlledTextBoxProps, ControlledTextBoxState, ControlledTextBox>
     {
-        public ControlledTextBox(ControlledTextBoxProps props) 
-            : base(props, new ControlledTextBoxState { SelectionStartTextIndex = null })
+        public ControlledTextBox(ControlledTextBoxProps props)
+            : base(new ControlledTextBoxState { SelectionStartTextIndex = null })
         {
         }
 
-        public override IElement Render()
+        public override IElement Render(StatefulComponentRenderContext<ControlledTextBoxProps, ControlledTextBoxState> context)
         {
-            return new TextElement(new TextElementProps(text: this.Props.Text, onMouse: this.OnTextClick),
-                Props.Selection.Select(p => RenderSelection(p)).ToArray());
+            return new TextElement(new TextElementProps(text: context.Props.Text, onMouse: (mouseEvent, bounds) => this.OnTextClick(mouseEvent, bounds, context.Props, context.State)),
+                context.Props.Selection.Select(p => RenderSelection(p)).ToArray());
         }
 
-        private void OnTextClick(TextMouseEvent clickEvent, Bounds bounds)
+        private void OnTextClick(TextMouseEvent clickEvent, Bounds bounds, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
+            props.OnMouse?.Invoke(new MouseEvent(clickEvent.OriginalState.Mouse, clickEvent.NewState.Mouse), bounds);
             if (!clickEvent.OriginalState.TextIndex.HasValue || !clickEvent.NewState.TextIndex.HasValue)
             {
-                if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && this.Props.Selection.Length != 0)
+                if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && props.Selection.Length != 0)
                 {
-                    this.Props.OnSelectionChange(new TextSelection[] { });
+                    props.OnSelectionChange(new TextSelection[] { });
                 }
                 return;
             }
             if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown)
             {
-                this.State = new ControlledTextBoxState { SelectionStartTextIndex = clickEvent.NewState.TextIndex.Value };
-                Props.OnSelectionChange?.Invoke(new[] { new TextSelection(clickEvent.NewState.TextIndex.Value, clickEvent.NewState.TextIndex.Value) });
+                this.SetState(new ControlledTextBoxState { SelectionStartTextIndex = clickEvent.NewState.TextIndex.Value });
+                props.OnSelectionChange?.Invoke(new[] { new TextSelection(clickEvent.NewState.TextIndex.Value, clickEvent.NewState.TextIndex.Value) });
             }
-            if (clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && this.State.SelectionStartTextIndex.HasValue)
+            if (clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && state.SelectionStartTextIndex.HasValue)
             {
-                Props.OnSelectionChange?.Invoke(new[] { new TextSelection(Math.Min(this.State.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value), Math.Max(this.State.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value)) });
+                props.OnSelectionChange?.Invoke(new[] { new TextSelection(Math.Min(state.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value), Math.Max(state.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value)) });
             }
-        }
-
-        private IElement RenderUnselectedText()
-        {
-            return new TextElement(new TextElementProps(this.Props.Text, onMouse: this.OnTextClick));
         }
 
         private TextuallyPositionedChild RenderSelection(TextSelection selection)

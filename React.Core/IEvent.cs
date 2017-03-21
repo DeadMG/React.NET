@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IElement
+    public interface IEvent
     {
-        IElementState Update(IElementState existing, RenderContext renderContext);
+
+    }
+
+    public interface IEvent<State> : IEvent
+    { 
+        State OriginalState { get; }
+        State NewState { get; }
     }
 }

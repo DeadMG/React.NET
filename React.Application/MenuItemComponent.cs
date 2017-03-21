@@ -15,15 +15,15 @@ namespace React.Application
         public Action OnClick { get; set; }
     }
 
-    public class MenuItemComponent : Component<MenuItemProps, MenuItemComponent>
+    public class MenuItemComponent : StatelessComponent<MenuItemProps, MenuItemComponent>
     {
-        public MenuItemComponent(MenuItemProps props) : base(props)
+        public MenuItemComponent(MenuItemProps props)
         {
         }
-
-        public override IElement Render()
+        
+        public override IElement Render(StatelessComponentRenderContext<MenuItemProps> context)
         {
-            return new TextElement(new TextElementProps(this.Props.Name));
+            return new TextElement(new TextElementProps(context.Props.Name));
         }
     }
 }
