@@ -20,7 +20,7 @@ namespace React.Box
     public class StretchElementState : IElementState
     {
         private readonly IElementState nestedState;
-
+        
         public StretchElementState(StretchElementState existing, StretchElement element, RenderContext context)
         {
             nestedState = element.Child.Update(existing?.nestedState, context);
@@ -28,7 +28,12 @@ namespace React.Box
         }
 
         public Bounds BoundingBox { get; set; }
-                
+
+        public void FireEvents(List<IEvent> events)
+        {
+            nestedState.FireEvents(events);
+        }
+
         public void Render(IRenderer r)
         {
             nestedState.Render(r);

@@ -34,13 +34,14 @@ namespace React.Box
     {
         private readonly IElementState solidColourState;
         private readonly IElementState nestedState;
+        private readonly BackgroundElementProps props;
 
         public BackgroundElementState(BackgroundElementState existingState, BackgroundElement other, RenderContext context)
         {
-            Element = other;
+            props = other.Props;
             nestedState = other.Child.Update(existingState?.nestedState, context);
             solidColourState = context.Renderer.UpdateSolidColourElementState(existingState?.solidColourState, new SolidColourElement(new SolidColourElementProps(other.Props.Colour, b => nestedState.BoundingBox)), context);
-            PrimitivePropsHelpers.FireEvents(other.Props, nestedState.BoundingBox, context.Events);
+            
         }
 
         public Bounds BoundingBox => nestedState.BoundingBox;
@@ -51,6 +52,11 @@ namespace React.Box
             nestedState.Render(r);
         }
 
-        public BackgroundElement Element { get; }
+        public void FireEvents(List<IEvent> events)
+        {
+            PrimitivePropsHelpers.FireEvents(props, nestedState.BoundingBox, events);
+            solidColourState.FireEvents(events);
+            nestedState.FireEvents(events);
+        }
     }
 }

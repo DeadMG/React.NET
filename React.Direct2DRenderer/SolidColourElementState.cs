@@ -12,9 +12,11 @@ namespace React.DirectRenderer
     {
         private readonly SharpDX.Direct2D1.SolidColorBrush brush;
         private readonly Bounds boundingBox;
+        private readonly SolidColourElementProps props;
 
         public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, RenderContext context)
         {
+            props = other.Props;
             brush = existing?.brush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
             {
                 R = other.Props.Colour.R,
@@ -27,7 +29,12 @@ namespace React.DirectRenderer
         }
 
         public Bounds BoundingBox => boundingBox;
-                
+
+        public void FireEvents(List<IEvent> events)
+        {
+            PrimitivePropsHelpers.FireEvents(props, BoundingBox, events);
+        }
+
         public void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height), brush);

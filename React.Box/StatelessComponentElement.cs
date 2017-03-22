@@ -57,6 +57,11 @@ namespace React.Box
             renderResult?.Render(r);
         }
 
+        public void FireEvents(List<IEvent> events)
+        {
+            renderResult.FireEvents(events);
+        }
+
         public Bounds BoundingBox => renderResult.BoundingBox;
     }
 }

@@ -35,8 +35,7 @@ namespace React.Application
                 using (var renderer = new Renderer(renderForm.Handle, bounds))
                 {
                     var rootElement = RootComponent.CreateElement(null);
-                    var backgroundUpdater = new BackgroundUpdateContext();
-                    var backgroundLayout = new BackgroundLayout(rootElement, renderer, null, backgroundUpdater, bounds);
+                    var backgroundUpdater = new BackgroundUpdateContext(rootElement, renderer, null, bounds);
                     eventSource.Mouse += (MouseEvent mouseEvent) => backgroundUpdater.OnNextUpdate(mouseEvent);
                     eventSource.Keyboard += (KeyboardEvent keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
                     renderForm.Resize += (sender, _args) =>
@@ -46,10 +45,9 @@ namespace React.Application
                         bounds = newbounds;
                         backgroundUpdater.OnNextUpdate(resizeEvent);
                     };
-                    // Get the ball rolling
-                    backgroundUpdater.OnNextUpdate(() => { });
                     RenderLoop.Run(renderForm, () =>
                     {
+                        backgroundUpdater.EnsureRenderedOneFrame();
                     });
                 }
             }

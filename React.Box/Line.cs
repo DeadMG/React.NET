@@ -34,10 +34,11 @@ namespace React.Box
     public class LineState : IElementState
     {
         private readonly List<IElementState> nestedElementStates;
+        private readonly LineProps props;
 
         public LineState(LineState existing, Line e, RenderContext context)
         {
-            Line = e;
+            props = e.Props;
             var bounds = context.Bounds;
             nestedElementStates = e.Children.Select((elem, index) =>
             {
@@ -47,13 +48,19 @@ namespace React.Box
             }).ToList();
 
             BoundingBox = context.Bounds.Sum(e.Props.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
-            PrimitivePropsHelpers.FireEvents(e.Props, BoundingBox, context.Events);
+        }
+        
+        public Bounds BoundingBox { get; }
+
+        public void FireEvents(List<IEvent> events)
+        {
+            PrimitivePropsHelpers.FireEvents(props, BoundingBox, events);
+            foreach (var child in nestedElementStates)
+            {
+                child.FireEvents(events);
+            }
         }
 
-        public Line Line { get; }
-
-        public Bounds BoundingBox { get; }
-        
         public void Render(IRenderer r)
         {
             foreach (var element in nestedElementStates)

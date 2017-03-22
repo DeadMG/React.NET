@@ -8,19 +8,18 @@ namespace React.Core
 {
     public class RenderContext
     {
-        public RenderContext(Bounds bounds, IRenderer renderer, IComponentContext context, IUpdateContext updateContext, List<IEvent> events, HashSet<IDisposable> disposables)
+        public RenderContext(Bounds bounds, IRenderer renderer, IComponentContext context, IUpdateContext updateContext, HashSet<IDisposable> disposables)
         {
             this.Bounds = bounds;
             this.Renderer = renderer;
             this.Context = context;
             this.Disposables = disposables;
             this.UpdateContext = updateContext;
-            this.Events = events;
         }
 
         public RenderContext WithBounds(Bounds b)
         {
-            return new RenderContext(b, Renderer, Context, UpdateContext, Events, Disposables);
+            return new RenderContext(b, Renderer, Context, UpdateContext, Disposables);
         }
 
         public Bounds Bounds { get; }
@@ -28,6 +27,5 @@ namespace React.Core
         public IComponentContext Context { get; }
         public IUpdateContext UpdateContext { get; }
         public HashSet<IDisposable> Disposables { get; }
-        public List<IEvent> Events { get; }
     }
 }

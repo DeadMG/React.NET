@@ -25,7 +25,7 @@ namespace React.Application
                 if (newLocation == null) return;
                 var isLeftDown = e.ButtonFlags == MouseButtonFlags.LeftButtonDown ? true : e.ButtonFlags == MouseButtonFlags.LeftButtonUp ? false : currentState.LeftButtonDown;
                 var nextState = new MouseState(newLocation.Value.X, newLocation.Value.Y, isLeftDown);
-                if (nextState.LeftButtonDown != currentState.LeftButtonDown/* || nextState.X != currentState.X || nextState.Y != currentState.Y*/)
+                if (nextState.LeftButtonDown != currentState.LeftButtonDown || nextState.X != currentState.X || nextState.Y != currentState.Y)
                 {
                     var originalState = currentState;
                     currentState = nextState;

@@ -10,7 +10,5 @@ namespace React.Core
     {
         void OnNextUpdate(Action a);
         void OnNextUpdate(IEvent cause);
-
-        event Action<List<IEvent>> OnUpdatesFinished;
     }
 }

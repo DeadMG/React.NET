@@ -10,15 +10,15 @@ namespace React.DirectRenderer
 {
     public class TextElementState : IElementState
     {
-        private readonly string text;
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;
         private readonly SharpDX.Direct2D1.SolidColorBrush textBrush;
         private readonly List<IElementState> children;
+        private readonly TextElementProps props;
 
         public TextElementState(TextElementState existing, TextElement element, RenderContext context)
         {
-            text = element.Props.Text;
+            props = element.Props;
             format = existing?.format ?? new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(context.Renderer).fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(context.Renderer).fontFactory, element.Props.Text, format, context.Bounds.Width, context.Bounds.Height);
             textBrush = existing?.textBrush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new RawColor4(1, 1, 1, 1));
@@ -40,11 +40,6 @@ namespace React.DirectRenderer
                 childStates.Add(child.Child.Update(null, context.WithBounds(new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height))));
             }
             children = childStates;
-
-            foreach(var mouseEvent in context.Events.OfType<MouseEvent>())
-            {
-                element.Props.OnMouse?.Invoke(new TextMouseEvent(new TextMouseState(mouseEvent.OriginalState, GetTextIndex(mouseEvent.OriginalState)), new TextMouseState(mouseEvent.NewState, GetTextIndex(mouseEvent.NewState))), BoundingBox);
-            }
         }
 
         public Bounds BoundingBox { get; }
@@ -63,6 +58,14 @@ namespace React.DirectRenderer
             Renderer.AssertRendererType(r).d2dTarget.DrawTextLayout(new RawVector2(BoundingBox.X, BoundingBox.Y), layout, textBrush, SharpDX.Direct2D1.DrawTextOptions.Clip);
             foreach (var child in children)
                 child.Render(r);
+        }
+
+        public void FireEvents(List<IEvent> events)
+        {
+            foreach (var mouseEvent in events.OfType<MouseEvent>())
+            {
+                props.OnMouse?.Invoke(new TextMouseEvent(new TextMouseState(mouseEvent.OriginalState, GetTextIndex(mouseEvent.OriginalState)), new TextMouseState(mouseEvent.NewState, GetTextIndex(mouseEvent.NewState))), BoundingBox);
+            }
         }
     }
 }

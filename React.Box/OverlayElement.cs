@@ -41,7 +41,13 @@ namespace React.Box
         }
 
         public Bounds BoundingBox => child.BoundingBox;
-                
+
+        public void FireEvents(List<IEvent> events)
+        {
+            child.FireEvents(events);
+            overlay.FireEvents(events);
+        }
+
         public void Render(IRenderer r)
         {
             child?.Render(r);
