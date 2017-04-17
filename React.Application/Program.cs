@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using React.Core;
 using System.Drawing;
 using React.Box;
+using Redux.Box;
+using React.Redux;
 
 namespace React.Application
 {
@@ -34,8 +36,13 @@ namespace React.Application
                 
                 using (var renderer = new Renderer(renderForm.Handle, bounds))
                 {
-                    var rootElement = RootComponent.CreateElement(null);
+                    var store = new Store<StoreState, StoreState>(
+                        new StoreState { Clicked = false, Selection = new TextSelection[] { new TextSelection(2, 2) } },
+                        (state, action) => action);
+
+                    var rootElement = new ReduxProviderElement<StoreState, StoreState>(store, RootComponent.CreateElement(null));
                     var backgroundUpdater = new BackgroundUpdateContext(rootElement, renderer, null, bounds);
+                    store.StateChanged += (existing, newState) => backgroundUpdater.OnNextUpdate(new ChangeEvent<StoreState>(existing, newState));
                     eventSource.Mouse += (ChangeEvent<MouseState> mouseEvent) => backgroundUpdater.OnNextUpdate(mouseEvent);
                     eventSource.Keyboard += (ChangeEvent<KeyboardState> keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
                     renderForm.Resize += (sender, _args) =>
@@ -45,6 +52,10 @@ namespace React.Application
                         bounds = newbounds;
                         backgroundUpdater.OnNextUpdate(resizeEvent);
                     };
+
+                    // Get the ball rolling
+                    backgroundUpdater.OnNextUpdate(() => { });
+                    
                     RenderLoop.Run(renderForm, () =>
                     {
                         backgroundUpdater.EnsureRenderedOneFrame();

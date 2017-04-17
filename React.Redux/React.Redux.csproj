@@ -42,10 +42,14 @@
   <ItemGroup>
     <Compile Include="IReduxComponentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReduxStateUpdateEvent.cs" />
-    <Compile Include="ReduxStoreContext.cs" />
+    <Compile Include="ReduxComponent.cs" />
+    <Compile Include="ReduxProviderElement.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\React.Box\React.Box.csproj">
+      <Project>{ca33a43f-6c03-4d78-b7f3-09d9222427fd}</Project>
+      <Name>React.Box</Name>
+    </ProjectReference>
     <ProjectReference Include="..\React.Core\React.Core.csproj">
       <Project>{f27c39b5-862e-4d84-9d4d-461d5747a5a4}</Project>
       <Name>React.Core</Name>

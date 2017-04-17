@@ -33,17 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpDX, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.3.0.2\lib\net45\SharpDX.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Desktop, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Desktop.3.0.2\lib\net45\SharpDX.Desktop.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SharpDX.Desktop, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Desktop.3.1.1\lib\net45\SharpDX.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.RawInput, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.RawInput.3.0.2\lib\net45\SharpDX.RawInput.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SharpDX.RawInput, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.RawInput.3.1.1\lib\net45\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawInputEventSource.cs" />
     <Compile Include="RootComponent.cs" />
+    <Compile Include="StoreState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -81,6 +79,18 @@
     <ProjectReference Include="..\React.Core\React.Core.csproj">
       <Project>{f27c39b5-862e-4d84-9d4d-461d5747a5a4}</Project>
       <Name>React.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\React.Redux\React.Redux.csproj">
+      <Project>{214947ad-4ab4-4dca-ba63-c2d7ae8d7086}</Project>
+      <Name>React.Redux</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Redux.Box\Redux.Box.csproj">
+      <Project>{b0cef5d7-ab63-4d38-a559-3596ceae8f08}</Project>
+      <Name>Redux.Box</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Redux.Core\Redux.Core.csproj">
+      <Project>{b63b4904-cfcc-458b-8398-c4534d5a2336}</Project>
+      <Name>Redux.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

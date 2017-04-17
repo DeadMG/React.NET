@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMiddleware.cs" />
+    <Compile Include="IMiddlewareCreator.cs" />
     <Compile Include="IReduxStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Redux.Core;
 
-namespace React.Redux
+namespace Redux.Box
 {
     public class Store<TState, Action> : IReduxStore<TState, Action>
     {
         private readonly Func<TState, Action, TState> reducer;
-        private readonly IMiddleware<TState, Action>[] middleware;
+        private readonly IMiddleware<Action>[] middleware;
 
-        public Store(TState initial, Func<TState, Action, TState> reducer, params IMiddleware<TState, Action>[] middleware)
+        public Store(TState initial, Func<TState, Action, TState> reducer, params IMiddlewareCreator<TState, Action>[] middleware)
         {
             this.reducer = reducer;
-            this.middleware = middleware.Where(x => x != null).ToArray();
+            this.middleware = middleware.Select(x => x?.Create(this)).Where(x => x != null).ToArray();
             State = initial;
         }
         
@@ -26,6 +27,10 @@ namespace React.Redux
             try
             {
                 Dispatch(middleware, a);
+                if (!ReferenceEquals(existing, State))
+                {
+                    StateChanged?.Invoke(existing, State);
+                }
             }
             catch (Exception)
             {
@@ -34,14 +39,16 @@ namespace React.Redux
             }
         }
 
-        private void Dispatch(IMiddleware<TState, Action>[] remainingMiddlewares, Action a)
+        private void Dispatch(IMiddleware<Action>[] remainingMiddlewares, Action a)
         {
             if (remainingMiddlewares.Length == 0)
             {
                 State = reducer(State, a);
                 return;
             }
-            remainingMiddlewares[0].Dispatch(this, action => Dispatch(remainingMiddlewares.Take(1).ToArray(), action), a);
+            remainingMiddlewares[0].Dispatch(action => Dispatch(remainingMiddlewares.Skip(1).ToArray(), action), a);
         }
+
+        public event Action<TState, TState> StateChanged;
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Redux.Core
 {
-    public interface IMiddleware<TAction>
+    public interface IMiddlewareCreator<in TState, TAction>
     {
-        void Dispatch(Action<TAction> next, TAction action);
+        IMiddleware<TAction> Create(IReduxStore<TState, TAction> store);
     }
 }

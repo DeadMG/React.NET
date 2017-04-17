@@ -1,5 +1,4 @@
 ﻿using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;

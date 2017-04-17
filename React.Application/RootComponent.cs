@@ -7,28 +7,23 @@ using System.Text;
 using System.Threading.Tasks;
 using React.Core;
 using React.Box;
+using React.Redux;
 
 namespace React.Application
 {
-    public class RootComponentState
+    public class RootComponent : ReduxComponent<StoreState, StoreState, RootComponent>
     {
-        public bool Clicked { get; set; }
-        public TextSelection[] Selection { get; set; }
-    }
-
-    public class RootComponent : StatefulComponent<EmptyProps, RootComponentState, RootComponent>
-    {
-        public RootComponent(EmptyProps props) : base(new RootComponentState { Clicked = false, Selection = new TextSelection[] { new TextSelection(2, 2) } })
+        public RootComponent(EmptyProps props) : base()
         {
         }
         
-        public override IElement<IElementState> Render(EmptyProps props, RootComponentState state, IComponentContext context)
+        public override IElement<IElementState> Render(EmptyProps props, IReduxComponentContext<StoreState, StoreState> context)
         {
             return new BackgroundElement(new BackgroundElementProps(new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f)),
-                state.Clicked ? new StretchElement(this.RenderContents(state)) : this.RenderContents(state));
+                context.State.Clicked ? new StretchElement(this.RenderContents(context.State, context.Dispatch)) : this.RenderContents(context.State, context.Dispatch));
         }
 
-        private IElement<IElementState> RenderContents(RootComponentState state)
+        private IElement<IElementState> RenderContents(StoreState state, Action<StoreState> dispatch)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("DirectReact Sample")),
@@ -37,21 +32,21 @@ namespace React.Application
                     ProjectViewerComponent.CreateElement(null),
                     new Line(new LineProps(LineDirection.Horizontal),
                         new TextElement(new TextElementProps("Clicked:")),
-                        new EventElement<ChangeEvent<MouseState>, IElementState>((mouse, elementState) => this.TextClicked(mouse, elementState, state),
+                        new EventElement<ChangeEvent<MouseState>, IElementState>((mouse, elementState) => this.TextClicked(mouse, elementState, state, dispatch),
                             new TextElement(new TextElementProps(state.Clicked.ToString()))),
-                        this.RenderRandomBox(state))));
+                        this.RenderRandomBox(state, dispatch))));
         }
 
-        private IElement<IElementState> RenderRandomBox(RootComponentState state)
+        private IElement<IElementState> RenderRandomBox(StoreState state, Action<StoreState> dispatch)
         {
-            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: state.Selection, onSelectionChange: (sel) => this.SetState(new RootComponentState { Clicked = state.Clicked, Selection = sel })));
+            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: state.Selection, onSelectionChange: sel => dispatch(new StoreState { Clicked = state.Clicked, Selection = sel })));
         }
 
-        private void TextClicked(ChangeEvent<MouseState> mouse, IElementState textElementState, RootComponentState state)
+        private void TextClicked(ChangeEvent<MouseState> mouse, IElementState element, StoreState state, Action<StoreState> dispatch)
         {
-            if (mouse.OriginalState.LeftButtonDown && !mouse.NewState.LeftButtonDown && textElementState.BoundingBox.IsInBounds(mouse.NewState))
+            if (mouse.OriginalState.LeftButtonDown && !mouse.NewState.LeftButtonDown && element.BoundingBox.IsInBounds(mouse.NewState))
             {
-                this.SetState(new RootComponentState { Clicked = !state.Clicked, Selection = state.Selection });
+                dispatch(new StoreState { Clicked = !state.Clicked, Selection = state.Selection });
             }
         }
     }

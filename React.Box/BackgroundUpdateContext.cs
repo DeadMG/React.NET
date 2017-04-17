@@ -65,10 +65,9 @@ namespace React.Box
                                 }
                             }
                             foreach (var update in updates)
-                                update.UserDefinedAction?.Invoke();
-                            if (updates.Any(u => u.ExternalEvent != null))
                             {
-                                currentElementState.FireEvents(updates.Where(u => u.ExternalEvent != null).Select(u => u.ExternalEvent).ToList());
+                                update.UserDefinedAction?.Invoke();
+                                if (update.ExternalEvent != null) currentElementState.FireEvents(new List<IEvent> { update.ExternalEvent });
                             }
                         }
                     });
@@ -99,7 +98,7 @@ namespace React.Box
         {
             OnNextUpdate(new Update { ExternalEvent = cause });
         }
-
+        
         public BackgroundUpdateContext(IElement<IElementState> root, IRenderer renderer, IComponentContext context, Bounds initialBounds)
         {
             this.root = root;

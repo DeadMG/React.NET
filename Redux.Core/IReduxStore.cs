@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace React.Redux
+namespace Redux.Core
 {
-    public interface IReduxStore<TState, Action>
+    public interface IReduxStore<out TState, in TAction>
     {
-        void Dispatch(Action a);
+        void Dispatch(TAction a);
         TState State { get; }
     }
 }
