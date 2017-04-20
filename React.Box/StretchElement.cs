@@ -9,12 +9,12 @@ namespace React.Box
 {
     public class StretchElement : Element<StretchElementState, StretchElement>
     {
-        public StretchElement(IElement child)
+        public StretchElement(IElement<IElementState> child)
         {
             this.Child = child;
         }
 
-        public IElement Child { get; }
+        public IElement<IElementState> Child { get; }
     }
 
     public class StretchElementState : IElementState
@@ -29,7 +29,7 @@ namespace React.Box
 
         public Bounds BoundingBox { get; set; }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
             nestedState.FireEvents(events);
         }

@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace React.Box
 {
-    public class BackgroundElementProps : PrimitiveProps
+    public class BackgroundElementProps
     {
-        public BackgroundElementProps(Colour colour, Action<MouseEvent, Bounds> onMouse = null, Action<KeyboardEvent> onKeyboard = null)
-            : base(onMouse, onKeyboard)
+        public BackgroundElementProps(Colour colour, Action<IReadOnlyList<IEvent>, IElementState> onEvents = null)
         {
             this.Colour = colour;
         }
 
         public Colour Colour { get; }
+        public Action<IReadOnlyList<IEvent>, IElementState> OnEvents { get; }
     }
 
     public class BackgroundElement : Element<BackgroundElementState, BackgroundElement>
     {
-        public BackgroundElement(BackgroundElementProps props, IElement child)
+        public BackgroundElement(BackgroundElementProps props, IElement<IElementState> child)
         {
             this.Props = props;
             this.Child = child;
         }
         
         public BackgroundElementProps Props { get; }
-        public IElement Child { get; }
+        public IElement<IElementState> Child { get; }
     }
 
     public class BackgroundElementState : IElementState
@@ -52,9 +52,9 @@ namespace React.Box
             nestedState.Render(r);
         }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            PrimitivePropsHelpers.FireEvents(props, nestedState.BoundingBox, events);
+            props.OnEvents?.Invoke(events, this);
             solidColourState.FireEvents(events);
             nestedState.FireEvents(events);
         }

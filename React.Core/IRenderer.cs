@@ -8,8 +8,8 @@ namespace React.Core
 {
     public interface IRenderer
     {
-        IElementState UpdateTextElementState(IElementState existing, TextElement element, RenderContext context);
-        IElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement element, RenderContext context);
+        ITextElementState UpdateTextElementState(IElementState existing, TextElement element, RenderContext context);
+        ISolidColourElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement element, RenderContext context);
 
         void RenderFrame(IElementState root);
     }

@@ -7,27 +7,26 @@ using System.Threading.Tasks;
 
 namespace React.Box
 {
-    public class ControlledTextBoxProps : PrimitiveProps
+    public class ControlledTextBoxProps
     {
-        public ControlledTextBoxProps(string text, Action<string> onTextChange = null, Action<TextSelection[]> onSelectionChange = null, TextSelection[] selection = null, Action<MouseEvent, Bounds> onMouse = null, Action<KeyboardEvent> onKeyboard = null)
-            : base(onMouse, onKeyboard)
+        public ControlledTextBoxProps(string text, TextSelection[] selection = null, Action<TextSelection[]> onSelectionChange = null, Action<string> onTextChange = null)
         {
-            this.OnTextChange = onTextChange;
-            this.OnSelectionChange = onSelectionChange;
             this.Text = text ?? "";
             this.Selection = selection ?? new TextSelection[0];
+            this.OnSelectionChange = onSelectionChange;
+            this.OnTextChange = onTextChange;
+
             if (Selection.Any(p => p == null))
                 throw new InvalidOperationException("Null text selection range");
             Func<int, bool> isInvalid = index => index < 0 || index > text.Length + 1;
             if (Selection.Any(p => isInvalid(p.StartIndex) || isInvalid(p.EndIndex)))
                 throw new InvalidOperationException("Text selection range had bad indexes");
         }
-
-        public Action<string> OnTextChange { get; }
-        public string Text { get; }
-
-        public Action<TextSelection[]> OnSelectionChange { get; }
+        
+        public string Text { get; }        
         public TextSelection[] Selection { get; }
+        public Action<TextSelection[]> OnSelectionChange { get; }
+        public Action<string> OnTextChange { get; }
     }
 
     public class ControlledTextBoxState
@@ -42,31 +41,33 @@ namespace React.Box
         {
         }
 
-        public override IElement Render(StatefulComponentRenderContext<ControlledTextBoxProps, ControlledTextBoxState> context)
+        public override IElement<IElementState> Render(ControlledTextBoxProps props, ControlledTextBoxState state, IComponentContext context)
         {
-            return new TextElement(new TextElementProps(text: context.Props.Text, onMouse: (mouseEvent, bounds) => this.OnTextClick(mouseEvent, bounds, context.Props, context.State)),
-                context.Props.Selection.Select(p => RenderSelection(p)).ToArray());
+            return new EventElement<ChangeEvent<MouseState>, ITextElementState>((@event, textElementState) => this.OnTextMouse(@event, textElementState, props, state), 
+                new TextElement(new TextElementProps(props.Text), 
+                    props.Selection.Select(p => RenderSelection(p)).ToArray()));
         }
-
-        private void OnTextClick(TextMouseEvent clickEvent, Bounds bounds, ControlledTextBoxProps props, ControlledTextBoxState state)
+        
+        private void OnTextMouse(ChangeEvent<MouseState> clickEvent, ITextElementState textElementState, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
-            props.OnMouse?.Invoke(new MouseEvent(clickEvent.OriginalState.Mouse, clickEvent.NewState.Mouse), bounds);
-            if (!clickEvent.OriginalState.TextIndex.HasValue || !clickEvent.NewState.TextIndex.HasValue)
+            var originalTextIndex = textElementState.GetTextIndex(clickEvent.OriginalState.X, clickEvent.OriginalState.Y);
+            var newTextIndex = textElementState.GetTextIndex(clickEvent.NewState.X, clickEvent.NewState.Y);
+            if (!originalTextIndex.HasValue || !newTextIndex.HasValue)
             {
-                if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && props.Selection.Length != 0)
+                if (!clickEvent.OriginalState.LeftButtonDown && clickEvent.NewState.LeftButtonDown && props.Selection.Length != 0)
                 {
                     props.OnSelectionChange(new TextSelection[] { });
                 }
                 return;
             }
-            if (!clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown)
+            if (!clickEvent.OriginalState.LeftButtonDown && clickEvent.NewState.LeftButtonDown)
             {
-                this.SetState(new ControlledTextBoxState { SelectionStartTextIndex = clickEvent.NewState.TextIndex.Value });
-                props.OnSelectionChange?.Invoke(new[] { new TextSelection(clickEvent.NewState.TextIndex.Value, clickEvent.NewState.TextIndex.Value) });
+                this.SetState(new ControlledTextBoxState { SelectionStartTextIndex = newTextIndex.Value });
+                props.OnSelectionChange(new [] { new TextSelection(newTextIndex.Value, newTextIndex.Value) });
             }
-            if (clickEvent.OriginalState.Mouse.LeftButtonDown && clickEvent.NewState.Mouse.LeftButtonDown && state.SelectionStartTextIndex.HasValue)
+            if (clickEvent.OriginalState.LeftButtonDown && clickEvent.NewState.LeftButtonDown && state.SelectionStartTextIndex.HasValue)
             {
-                props.OnSelectionChange?.Invoke(new[] { new TextSelection(Math.Min(state.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value), Math.Max(state.SelectionStartTextIndex.Value, clickEvent.NewState.TextIndex.Value)) });
+                props.OnSelectionChange(new[] { new TextSelection(Math.Min(state.SelectionStartTextIndex.Value, newTextIndex.Value), Math.Max(state.SelectionStartTextIndex.Value, newTextIndex.Value)) });
             }
         }
 

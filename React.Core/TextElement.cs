@@ -8,29 +8,27 @@ namespace React.Core
 {
     public class TextuallyPositionedChild
     {
-        public TextuallyPositionedChild(TextSelection location, IElement child)
+        public TextuallyPositionedChild(TextSelection location, IElement<IElementState> child)
         {
             this.Location = location;
             this.Child = child;
         }
 
         public TextSelection Location { get; }
-        public IElement Child { get; }
+        public IElement<IElementState> Child { get; }
     }
 
     public class TextElementProps
     {
-        public TextElementProps(string text, Action<TextMouseEvent, Bounds> onMouse = null)
+        public TextElementProps(string text)
         {
             this.Text = text;
-            this.OnMouse = onMouse;
         }
 
         public string Text { get; }
-        public Action<TextMouseEvent, Bounds> OnMouse { get; }
     }
     
-    public class TextElement : IElement
+    public class TextElement : IElement<ITextElementState>
     {
         public TextElement(TextElementProps props, params TextuallyPositionedChild[] children)
         {
@@ -38,7 +36,7 @@ namespace React.Core
             this.Children = children ?? new TextuallyPositionedChild[0];
         }
 
-        public IElementState Update(IElementState existing, RenderContext context)
+        public ITextElementState Update(IElementState existing, RenderContext context)
         {
             return context.Renderer.UpdateTextElementState(existing, this, context);
         }

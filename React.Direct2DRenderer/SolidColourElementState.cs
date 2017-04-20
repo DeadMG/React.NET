@@ -8,7 +8,7 @@ using React.Box;
 
 namespace React.DirectRenderer
 {
-    public class SolidColourElementState : IElementState
+    public class SolidColourElementState : ISolidColourElementState
     {
         private readonly SharpDX.Direct2D1.SolidColorBrush brush;
         private readonly Bounds boundingBox;
@@ -30,9 +30,8 @@ namespace React.DirectRenderer
 
         public Bounds BoundingBox => boundingBox;
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            PrimitivePropsHelpers.FireEvents(props, BoundingBox, events);
         }
 
         public void Render(IRenderer r)

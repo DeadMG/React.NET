@@ -51,10 +51,7 @@
     <Compile Include="IElementState.cs" />
     <Compile Include="ISolidColourElementState.cs" />
     <Compile Include="ITextElementState.cs" />
-    <Compile Include="KeyboardEvent.cs" />
-    <Compile Include="MouseEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResizeEvent.cs" />
     <Compile Include="SolidColourElement.cs" />
     <Compile Include="TextElement.cs" />
     <Compile Include="TextSelection.cs" />

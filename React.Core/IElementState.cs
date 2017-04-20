@@ -12,6 +12,6 @@ namespace React.Core
 
         Bounds BoundingBox { get; }
 
-        void FireEvents(List<IEvent> events);
+        void FireEvents(IReadOnlyList<IEvent> events);
     }
 }

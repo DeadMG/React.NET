@@ -46,7 +46,7 @@ namespace React.Box
         {
             componentInstance = existing?.componentInstance ?? CreateInstance(parent.Props);
             componentInstance.updateContext = context.UpdateContext;
-            renderResult = componentInstance.Render(new StatefulComponentRenderContext<P, S>(parent.Props, componentInstance.state, context.Context)).Update(existing?.renderResult, context);
+            renderResult = componentInstance.Render(parent.Props, componentInstance.state, context.Context).Update(existing?.renderResult, context);
             if (componentInstance is IDisposable)
             {
                 context.Disposables.Add(componentInstance as IDisposable);
@@ -58,7 +58,7 @@ namespace React.Box
             renderResult?.Render(r);
         }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
             renderResult.FireEvents(events);
         }

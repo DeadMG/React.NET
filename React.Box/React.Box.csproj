@@ -11,6 +11,7 @@
     <AssemblyName>React.Box</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,7 +45,12 @@
     <Compile Include="BackgroundElement.cs" />
     <Compile Include="BackgroundUpdateContext.cs" />
     <Compile Include="BoundsExtensions.cs" />
-    <Compile Include="PrimitivePropsHelpers.cs" />
+    <Compile Include="ChangeEvent.cs" />
+    <Compile Include="EventElement.cs" />
+    <Compile Include="IChangeEvent.cs" />
+    <Compile Include="KeyboardState.cs" />
+    <Compile Include="MouseState.cs" />
+    <Compile Include="ResizeState.cs" />
     <Compile Include="StatefulComponentElement.cs" />
     <Compile Include="StatefulComponent.cs" />
     <Compile Include="StatelessComponent.cs" />

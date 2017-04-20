@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IElement
+    public interface IElement<out ElementState>
+        where ElementState : IElementState
     {
-        IElementState Update(IElementState existing, RenderContext renderContext);
+        ElementState Update(IElementState existing, RenderContext renderContext);
     }
 }

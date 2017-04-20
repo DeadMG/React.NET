@@ -11,7 +11,7 @@ namespace React.Box
     public class BackgroundUpdateContext : IUpdateContext
     {
         // Immutable- no sync required
-        private readonly IElement root;
+        private readonly IElement<IElementState> root;
         private readonly IRenderer renderer;
         private readonly IComponentContext context;
 
@@ -100,7 +100,7 @@ namespace React.Box
             OnNextUpdate(new Update { ExternalEvent = cause });
         }
 
-        public BackgroundUpdateContext(IElement root, IRenderer renderer, IComponentContext context, Bounds initialBounds)
+        public BackgroundUpdateContext(IElement<IElementState> root, IRenderer renderer, IComponentContext context, Bounds initialBounds)
         {
             this.root = root;
             this.renderer = renderer;

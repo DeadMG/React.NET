@@ -9,14 +9,14 @@ namespace React.Box
 {
     public class OverlayElementProps
     {
-        public OverlayElementProps(IElement child, IElement overlay)
+        public OverlayElementProps(IElement<IElementState> child, IElement<IElementState> overlay)
         {
             this.Overlay = overlay;
             this.Child = child;
         }
 
-        public IElement Child { get; }
-        public IElement Overlay { get; }
+        public IElement<IElementState> Child { get; }
+        public IElement<IElementState> Overlay { get; }
     }
 
     public class OverlayElement : Element<OverlayElementState, OverlayElement>
@@ -42,12 +42,12 @@ namespace React.Box
 
         public Bounds BoundingBox => child.BoundingBox;
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
             child.FireEvents(events);
             overlay.FireEvents(events);
         }
-
+        
         public void Render(IRenderer r)
         {
             child?.Render(r);

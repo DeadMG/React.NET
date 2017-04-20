@@ -22,13 +22,13 @@ namespace React.Application
         {
         }
         
-        public override IElement Render(StatefulComponentRenderContext<EmptyProps, RootComponentState> context)
+        public override IElement<IElementState> Render(EmptyProps props, RootComponentState state, IComponentContext context)
         {
             return new BackgroundElement(new BackgroundElementProps(new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f)),
-                context.State.Clicked ? new StretchElement(this.RenderContents(context.State)) : this.RenderContents(context.State));
+                state.Clicked ? new StretchElement(this.RenderContents(state)) : this.RenderContents(state));
         }
 
-        private IElement RenderContents(RootComponentState state)
+        private IElement<IElementState> RenderContents(RootComponentState state)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("DirectReact Sample")),
@@ -37,18 +37,19 @@ namespace React.Application
                     ProjectViewerComponent.CreateElement(null),
                     new Line(new LineProps(LineDirection.Horizontal),
                         new TextElement(new TextElementProps("Clicked:")),
-                        new TextElement(new TextElementProps(state.Clicked.ToString(), onMouse: (mouse, bounds) => this.TextClicked(mouse, bounds, state))),
+                        new EventElement<ChangeEvent<MouseState>, IElementState>((mouse, elementState) => this.TextClicked(mouse, elementState, state),
+                            new TextElement(new TextElementProps(state.Clicked.ToString()))),
                         this.RenderRandomBox(state))));
         }
 
-        private IElement RenderRandomBox(RootComponentState state)
+        private IElement<IElementState> RenderRandomBox(RootComponentState state)
         {
-            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: state.Selection, onSelectionChange: sel => this.SetState(new RootComponentState { Clicked = state.Clicked, Selection = sel })));
+            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: state.Selection, onSelectionChange: (sel) => this.SetState(new RootComponentState { Clicked = state.Clicked, Selection = sel })));
         }
 
-        private void TextClicked(TextMouseEvent mouse, Bounds bounds, RootComponentState state)
+        private void TextClicked(ChangeEvent<MouseState> mouse, IElementState textElementState, RootComponentState state)
         {
-            if (mouse.OriginalState.Mouse.LeftButtonDown && !mouse.NewState.Mouse.LeftButtonDown && bounds.IsInBounds(mouse.NewState.Mouse))
+            if (mouse.OriginalState.LeftButtonDown && !mouse.NewState.LeftButtonDown && textElementState.BoundingBox.IsInBounds(mouse.NewState))
             {
                 this.SetState(new RootComponentState { Clicked = !state.Clicked, Selection = state.Selection });
             }

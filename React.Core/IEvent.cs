@@ -10,10 +10,4 @@ namespace React.Core
     {
 
     }
-
-    public interface IEvent<State> : IEvent
-    { 
-        State OriginalState { get; }
-        State NewState { get; }
-    }
 }

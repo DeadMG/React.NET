@@ -36,12 +36,12 @@ namespace React.Application
                 {
                     var rootElement = RootComponent.CreateElement(null);
                     var backgroundUpdater = new BackgroundUpdateContext(rootElement, renderer, null, bounds);
-                    eventSource.Mouse += (MouseEvent mouseEvent) => backgroundUpdater.OnNextUpdate(mouseEvent);
-                    eventSource.Keyboard += (KeyboardEvent keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
+                    eventSource.Mouse += (ChangeEvent<MouseState> mouseEvent) => backgroundUpdater.OnNextUpdate(mouseEvent);
+                    eventSource.Keyboard += (ChangeEvent<KeyboardState> keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
                     renderForm.Resize += (sender, _args) =>
                     {
                         var newbounds = new Bounds(x: 0, y: 0, width: renderForm.ClientSize.Width, height: renderForm.ClientSize.Height);
-                        var resizeEvent = new ResizeEvent(new ResizeState(bounds.Width, bounds.Height), new ResizeState(newbounds.Width, newbounds.Height));
+                        var resizeEvent = new ChangeEvent<ResizeState>(new ResizeState(bounds.Width, bounds.Height), new ResizeState(newbounds.Width, newbounds.Height));
                         bounds = newbounds;
                         backgroundUpdater.OnNextUpdate(resizeEvent);
                     };

@@ -60,12 +60,12 @@ namespace React.DirectRenderer
                 disposable?.Dispose();
         }
         
-        public IElementState UpdateTextElementState(IElementState existing, TextElement t, RenderContext context)
+        public ITextElementState UpdateTextElementState(IElementState existing, TextElement t, RenderContext context)
         {
             return new TextElementState(existing as TextElementState, t, context);
         }
 
-        public IElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement b2, RenderContext context)
+        public ISolidColourElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement b2, RenderContext context)
         {
             return new SolidColourElementState(existing as SolidColourElementState, b2, context);
         }

@@ -6,21 +6,7 @@ using System.Threading.Tasks;
 using React.Core;
 
 namespace React.Box
-{
-    public class StatefulComponentRenderContext<P, S>
-    {
-        public StatefulComponentRenderContext(P props, S state, IComponentContext context)
-        {
-            this.Props = props;
-            this.Context = context;
-            this.State = state;
-        }
-
-        public P Props { get; }
-        public S State { get; }
-        public IComponentContext Context { get; }
-    }
-    
+{    
     public abstract class StatefulComponent<P, S, C>
         where C : StatefulComponent<P, S, C>
     {
@@ -37,7 +23,7 @@ namespace React.Box
             return new StatefulComponentElement<P, S, C>(currentProps);
         }
         
-        public abstract IElement Render(StatefulComponentRenderContext<P, S> context);
+        public abstract IElement<IElementState> Render(P props, S state, IComponentContext context);
 
         public Task SetState(S newState)
         {

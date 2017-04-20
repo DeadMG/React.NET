@@ -45,7 +45,7 @@ namespace React.Box
         public StatelessComponentElementState(StatelessComponentElementState<P, C> existing, StatelessComponentElement<P, C> parent, RenderContext context)
         {
             ComponentInstance = existing?.ComponentInstance ?? CreateInstance(parent.Props);
-            renderResult = ComponentInstance.Render(new StatelessComponentRenderContext<P>(parent.Props, context.Context)).Update(existing?.renderResult, context);
+            renderResult = ComponentInstance.Render(parent.Props, context.Context).Update(existing?.renderResult, context);
             if (ComponentInstance is IDisposable)
             {
                 context.Disposables.Add(ComponentInstance as IDisposable);
@@ -57,7 +57,7 @@ namespace React.Box
             renderResult?.Render(r);
         }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
             renderResult.FireEvents(events);
         }

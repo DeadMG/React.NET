@@ -7,27 +7,27 @@ using React.Core;
 
 namespace React.Box
 {
-    public class LineProps : PrimitiveProps
+    public class LineProps
     {
-        public LineProps(LineDirection direction, Action<MouseEvent, Bounds> onMouse = null, Action<KeyboardEvent> onKeyboard = null)
-            : base(onMouse, onKeyboard)
+        public LineProps(LineDirection direction, Action<IReadOnlyList<IEvent>, IElementState> onEvents = null)
         {
             this.Direction = direction;
         }
 
         public LineDirection Direction { get; }
+        public Action<IReadOnlyList<IEvent>, IElementState> OnEvents { get; set; }
     }
 
     public class Line : Element<LineState, Line>
     {
-        public Line(LineProps props, params IElement[] children)
+        public Line(LineProps props, params IElement<IElementState>[] children)
         {
             if (props == null) throw new InvalidOperationException();
             this.Children = children;
             this.Props = props;
         }
 
-        public IElement[] Children { get; }
+        public IElement<IElementState>[] Children { get; }
         public LineProps Props { get; }
     }
 
@@ -52,9 +52,9 @@ namespace React.Box
         
         public Bounds BoundingBox { get; }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            PrimitivePropsHelpers.FireEvents(props, BoundingBox, events);
+            props.OnEvents?.Invoke(events, this);
             foreach (var child in nestedElementStates)
             {
                 child.FireEvents(events);

@@ -11,7 +11,7 @@ namespace React.Application
 {
     public class ProjectViewerComponent : StatelessComponent<ProjectViewerComponent>
     {
-        public override IElement Render(StatelessComponentRenderContext<EmptyProps> context)
+        public override IElement<IElementState> Render(EmptyProps props, IComponentContext context)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("File1")),

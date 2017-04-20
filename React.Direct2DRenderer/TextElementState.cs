@@ -8,7 +8,7 @@ using SharpDX.Mathematics.Interop;
 
 namespace React.DirectRenderer
 {
-    public class TextElementState : IElementState
+    public class TextElementState : ITextElementState
     {
         private readonly SharpDX.DirectWrite.TextFormat format;
         private readonly SharpDX.DirectWrite.TextLayout layout;
@@ -44,15 +44,6 @@ namespace React.DirectRenderer
 
         public Bounds BoundingBox { get; }
         
-        private int? GetTextIndex(MouseState state)
-        {
-            RawBool isTrailing;
-            RawBool isInside;
-            var metrics = layout.HitTestPoint(state.X - BoundingBox.X, state.Y - BoundingBox.Y, out isTrailing, out isInside);
-            if (!isInside) return null;
-            return isTrailing ? metrics.TextPosition + 1 : metrics.TextPosition;
-        }
-        
         public void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.DrawTextLayout(new RawVector2(BoundingBox.X, BoundingBox.Y), layout, textBrush, SharpDX.Direct2D1.DrawTextOptions.Clip);
@@ -60,12 +51,17 @@ namespace React.DirectRenderer
                 child.Render(r);
         }
 
-        public void FireEvents(List<IEvent> events)
+        public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            foreach (var mouseEvent in events.OfType<MouseEvent>())
-            {
-                props.OnMouse?.Invoke(new TextMouseEvent(new TextMouseState(mouseEvent.OriginalState, GetTextIndex(mouseEvent.OriginalState)), new TextMouseState(mouseEvent.NewState, GetTextIndex(mouseEvent.NewState))), BoundingBox);
-            }
+        }
+
+        public int? GetTextIndex(int x, int y)
+        {
+            RawBool isTrailing;
+            RawBool isInside;
+            var metrics = layout.HitTestPoint(x - BoundingBox.X, y - BoundingBox.Y, out isTrailing, out isInside);
+            if (!isInside) return null;
+            return isTrailing ? metrics.TextPosition + 1 : metrics.TextPosition;
         }
     }
 }

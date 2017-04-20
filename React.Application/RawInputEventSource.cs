@@ -1,4 +1,5 @@
-﻿using React.Core;
+﻿using React.Box;
+using React.Core;
 using SharpDX.RawInput;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace React.Application
                 {
                     var originalState = currentState;
                     currentState = nextState;
-                    Mouse?.Invoke(new MouseEvent(originalState, nextState));
+                    Mouse?.Invoke(new ChangeEvent<MouseState>(originalState, nextState));
                 }
             };
 
@@ -129,8 +130,8 @@ namespace React.Application
             return buf.ToString();
         }
 
-        public event Action<KeyboardEvent> Keyboard;
-        public event Action<MouseEvent> Mouse;
+        public event Action<ChangeEvent<KeyboardState>> Keyboard;
+        public event Action<ChangeEvent<MouseState>> Mouse;
 
         [DllImport("user32.dll")]
         private static extern int GetKeyNameTextW(uint lParam, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 512)]StringBuilder receivingBuffer, int bufferSize);

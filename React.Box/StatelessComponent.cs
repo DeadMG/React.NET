@@ -8,19 +8,7 @@ using React.Core;
 namespace React.Box
 {
     public class EmptyProps { };
-
-    public class StatelessComponentRenderContext<P>
-    {
-        public StatelessComponentRenderContext(P props, IComponentContext context)
-        {
-            this.Props = props;
-            this.Context = context;
-        }
-
-        public P Props { get; }
-        public IComponentContext Context { get; }
-    }
-    
+        
     public abstract class StatelessComponent<C> : StatelessComponent<EmptyProps, C>
         where C : StatelessComponent<C>
     {
@@ -34,6 +22,6 @@ namespace React.Box
             return new StatelessComponentElement<P, C>(currentProps);
         }
 
-        public abstract IElement Render(StatelessComponentRenderContext<P> context);
+        public abstract IElement<IElementState> Render(P props, IComponentContext context);
     }
 }

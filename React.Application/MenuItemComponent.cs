@@ -21,9 +21,9 @@ namespace React.Application
         {
         }
         
-        public override IElement Render(StatelessComponentRenderContext<MenuItemProps> context)
+        public override IElement<IElementState> Render(MenuItemProps props, IComponentContext context)
         {
-            return new TextElement(new TextElementProps(context.Props.Name));
+            return new TextElement(new TextElementProps(props.Name));
         }
     }
 }
