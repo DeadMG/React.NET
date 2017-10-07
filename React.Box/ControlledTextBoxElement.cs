@@ -122,27 +122,122 @@ namespace React.Box
             return pieces.Where(p => p.Selected || p.Text.Length != 0);
         }
 
+        private IEnumerable<TextPiece> CollapseToFirstSelection(List<TextPiece> pieces)
+        {
+            var targetPiece = pieces.First(p => p.Selected);
+
+            // We cut all selections, then insert as appropriate. If there are no selections
+            // to be inserted, add one at the start (this is the only case where this can happen).
+            if (!pieces.Any(piece => piece == targetPiece && piece.Text.Length != 0) && 
+                !pieces.Any(piece => pieces.IndexOf(piece) == pieces.IndexOf(targetPiece) - 1 && targetPiece.Text.Length == 0))
+            {
+                yield return new TextPiece("", true);
+            }
+            
+            foreach (var piece in pieces)
+            {
+                if (piece == targetPiece && piece.Text.Length != 0)
+                {
+                    // Collapse to the start of the selection
+                    yield return new TextPiece("", true);
+                    yield return new TextPiece(piece.Text, false);
+                    continue;                 
+                }
+
+                if (pieces.IndexOf(piece) == pieces.IndexOf(targetPiece) - 1 && targetPiece.Text.Length == 0)
+                {
+                    yield return new TextPiece(piece.Text.Substring(0, piece.Text.Length - 1), false);
+                    yield return new TextPiece("", true);
+                    yield return new TextPiece(piece.Text.Substring(piece.Text.Length - 1), false);
+                    continue;
+                }
+
+                if (piece.Selected)
+                {
+                    // Cut any extra selections
+                    yield return new TextPiece(piece.Text, false);
+                    continue;
+                }
+
+                yield return piece;
+            }
+        }
+
+        private IEnumerable<TextPiece> CollapseToLastSelection(List<TextPiece> pieces)
+        {
+            var targetPiece = pieces.First(p => p.Selected);
+
+            foreach (var piece in pieces)
+            {
+                if (piece == targetPiece && piece.Text.Length != 0)
+                {
+                    // Collapse to the end of the selection
+                    yield return new TextPiece(piece.Text, false);
+                    yield return new TextPiece("", true);
+                    continue;
+                }
+
+                if (pieces.IndexOf(piece) == pieces.IndexOf(targetPiece) + 1 && targetPiece.Text.Length == 0)
+                {
+                    yield return new TextPiece(piece.Text.Substring(0, 1), false);
+                    yield return new TextPiece("", true);
+                    yield return new TextPiece(piece.Text.Substring(1), false);
+                    continue;
+                }
+
+                if (piece.Selected)
+                {
+                    // Cut any extra selections
+                    yield return new TextPiece(piece.Text, false);
+                    continue;
+                }
+
+                yield return piece;
+            }
+
+            // We cut all selections, then insert as appropriate. If there are no selections
+            // to be inserted, add one at the start (this is the only case where this can happen).
+            if (!pieces.Any(piece => piece == targetPiece && piece.Text.Length != 0) &&
+                !pieces.Any(piece => pieces.IndexOf(piece) == pieces.IndexOf(targetPiece) + 1 && targetPiece.Text.Length == 0))
+            {
+                yield return new TextPiece("", true);
+            }
+        }
+
         private void OnTextKeyboard(KeyboardEvent keyboardEvent, ITextElementState textElementState, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
             if (!keyboardEvent.WasUp) return;
 
+            // Control characters
+            var simplified = RemoveRedundantPieces(props.TextState.TextPieces).ToList();
             if (keyboardEvent.KeyName.ToLower() == "backspace")
             {
-                var replaced = RemoveRedundantPieces(ReplaceSelection("", props.TextState.TextPieces).ToList()).ToList();
+                var replaced = RemoveRedundantPieces(ReplaceSelection("", simplified).ToList()).ToList();
                 props.OnTextStateChange(new TextState(RemoveAdjacentCharacters(true, replaced).ToList()));
                 return;
             }
 
             if (keyboardEvent.KeyName.ToLower() == "delete")
             {
-                var replaced = RemoveRedundantPieces(ReplaceSelection("", props.TextState.TextPieces).ToList()).ToList();
+                var replaced = RemoveRedundantPieces(ReplaceSelection("", simplified).ToList()).ToList();
                 props.OnTextStateChange(new TextState(RemoveAdjacentCharacters(false, replaced).ToList()));
                 return;
             }
 
             if (keyboardEvent.KeyName.ToLower() == "left")
             {
+                if (!props.TextState.TextPieces.Any(p => p.Selected)) return;
+                var replaced = RemoveRedundantPieces(CollapseToFirstSelection(simplified)).ToList();
+                props.OnTextStateChange(new TextState(replaced));
+                return;
+            }
 
+            if (keyboardEvent.KeyName.ToLower() == "right")
+            {
+                if (!props.TextState.TextPieces.Any(p => p.Selected)) return;
+                var replaced = RemoveRedundantPieces(CollapseToLastSelection(simplified)).ToList();
+                props.OnTextStateChange(new TextState(replaced));
+                return;
             }
 
             if (keyboardEvent.TextValue == null) return;
