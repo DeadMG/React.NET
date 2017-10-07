@@ -90,7 +90,8 @@ namespace React.Box
                 {
                     yield return new TextPiece(value, false);
                     yield return new TextPiece("", true);
-                } else
+                }
+                else
                 {
                     yield return piece;
                 }
