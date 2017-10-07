@@ -78,7 +78,7 @@ namespace React.Box
         where TEvent : IEvent
         where TElement : class, IElementState
     {
-
+        TElement Nested { get; }
     }
 
     public class EventElementState<TEvent, TElement> : IEventElementState<TEvent, TElement>
@@ -110,5 +110,7 @@ namespace React.Box
         {
             nested.Render(r);
         }
+
+        public TElement Nested => nested;
     }
 }

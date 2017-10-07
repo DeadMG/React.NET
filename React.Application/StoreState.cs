@@ -1,4 +1,5 @@
-﻿using React.Core;
+﻿using React.Box;
+using React.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace React.Application
     public class StoreState
     {
         public bool Clicked { get; set; }
-        public TextSelection[] Selection { get; set; }
+        public TextState TextBoxState { get; set; }
     }
 }

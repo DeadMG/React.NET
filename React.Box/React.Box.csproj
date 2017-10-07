@@ -48,6 +48,7 @@
     <Compile Include="ChangeEvent.cs" />
     <Compile Include="EventElement.cs" />
     <Compile Include="IChangeEvent.cs" />
+    <Compile Include="KeyboardEvent.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="MouseState.cs" />
     <Compile Include="ResizeState.cs" />

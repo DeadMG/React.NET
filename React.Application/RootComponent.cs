@@ -39,14 +39,14 @@ namespace React.Application
 
         private IElement<IElementState> RenderRandomBox(StoreState state, Action<StoreState> dispatch)
         {
-            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(text: "test", selection: state.Selection, onSelectionChange: sel => dispatch(new StoreState { Clicked = state.Clicked, Selection = sel })));
+            return ControlledTextBox.CreateElement(new ControlledTextBoxProps(state.TextBoxState, onTextStateChange: sel => dispatch(new StoreState { Clicked = state.Clicked, TextBoxState = sel })));
         }
 
         private void TextClicked(ChangeEvent<MouseState> mouse, IElementState element, StoreState state, Action<StoreState> dispatch)
         {
             if (mouse.OriginalState.LeftButtonDown && !mouse.NewState.LeftButtonDown && element.BoundingBox.IsInBounds(mouse.NewState))
             {
-                dispatch(new StoreState { Clicked = !state.Clicked, Selection = state.Selection });
+                dispatch(new StoreState { Clicked = !state.Clicked, TextBoxState = state.TextBoxState });
             }
         }
     }

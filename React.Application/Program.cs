@@ -37,14 +37,14 @@ namespace React.Application
                 using (var renderer = new Renderer(renderForm.Handle, bounds))
                 {
                     var store = new Store<StoreState, StoreState>(
-                        new StoreState { Clicked = false, Selection = new TextSelection[] { new TextSelection(2, 2) } },
+                        new StoreState { Clicked = false, TextBoxState = new TextState(new List<TextPiece> { new TextPiece("test", false) }) },
                         (state, action) => action);
 
                     var rootElement = new ReduxProviderElement<StoreState, StoreState>(store, RootComponent.CreateElement(null));
                     var backgroundUpdater = new BackgroundUpdateContext(rootElement, renderer, null, bounds);
                     store.StateChanged += (existing, newState) => backgroundUpdater.OnNextUpdate(new ChangeEvent<StoreState>(existing, newState));
                     eventSource.Mouse += (ChangeEvent<MouseState> mouseEvent) => backgroundUpdater.OnNextUpdate(mouseEvent);
-                    eventSource.Keyboard += (ChangeEvent<KeyboardState> keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
+                    eventSource.Keyboard += (KeyboardEvent keyboardEvent) => backgroundUpdater.OnNextUpdate(keyboardEvent);
                     renderForm.Resize += (sender, _args) =>
                     {
                         var newbounds = new Bounds(x: 0, y: 0, width: renderForm.ClientSize.Width, height: renderForm.ClientSize.Height);

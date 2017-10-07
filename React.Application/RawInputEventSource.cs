@@ -113,10 +113,10 @@ namespace React.Application
 
                 var builder = new StringBuilder(512);
                 GetKeyNameTextW((scanCode << 16) | ((isE0 ? 1u : 0u) << 24), builder, 512);
-                Console.WriteLine(builder.ToString());
                 
                 var str = GetCharsFromKeys((uint)e.Key, (uint)e.MakeCode);
-                if (str != null) Console.WriteLine(str);
+
+                Keyboard(new KeyboardEvent(builder.ToString(), str, wasUp));
             };
         }
 
@@ -130,7 +130,7 @@ namespace React.Application
             return buf.ToString();
         }
 
-        public event Action<ChangeEvent<KeyboardState>> Keyboard;
+        public event Action<KeyboardEvent> Keyboard;
         public event Action<ChangeEvent<MouseState>> Mouse;
 
         [DllImport("user32.dll")]
