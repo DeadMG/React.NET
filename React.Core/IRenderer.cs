@@ -10,6 +10,7 @@ namespace React.Core
     {
         ITextElementState UpdateTextElementState(IElementState existing, TextElement element, RenderContext context);
         ISolidColourElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement element, RenderContext context);
+        IImageElementState UpdateImageElementState(IElementState existing, ImageElement element, RenderContext context);
 
         void RenderFrame(IElementState root);
     }

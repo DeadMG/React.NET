@@ -69,6 +69,11 @@ namespace React.DirectRenderer
             return new SolidColourElementState(existing as SolidColourElementState, b2, context);
         }
 
+        public IImageElementState UpdateImageElementState(IElementState existing, ImageElement b2, RenderContext context)
+        {
+            return new ImageElementState(existing as ImageElementState, b2, context);
+        }
+
         public static Renderer AssertRendererType(IRenderer renderer)
         {
             if (!(renderer is Renderer)) throw new InvalidOperationException("Can't render D2D compnents with a non-D2D renderer");

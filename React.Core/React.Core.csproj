@@ -46,6 +46,8 @@
     <Compile Include="Colour.cs" />
     <Compile Include="IComponentContext.cs" />
     <Compile Include="IEvent.cs" />
+    <Compile Include="IImageElementState.cs" />
+    <Compile Include="ImageElement.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="IElementState.cs" />
