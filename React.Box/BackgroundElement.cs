@@ -9,13 +9,12 @@ namespace React.Box
 {
     public class BackgroundElementProps
     {
-        public BackgroundElementProps(Colour colour, Action<IReadOnlyList<IEvent>, IElementState> onEvents = null)
+        public BackgroundElementProps(Colour colour)
         {
             this.Colour = colour;
         }
 
         public Colour Colour { get; }
-        public Action<IReadOnlyList<IEvent>, IElementState> OnEvents { get; }
     }
 
     public class BackgroundElement : Element<BackgroundElementState, BackgroundElement>
@@ -54,7 +53,6 @@ namespace React.Box
 
         public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            props.OnEvents?.Invoke(events, this);
             solidColourState.FireEvents(events);
             nestedState.FireEvents(events);
         }

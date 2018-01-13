@@ -9,13 +9,12 @@ namespace React.Box
 {
     public class LineProps
     {
-        public LineProps(LineDirection direction, Action<IReadOnlyList<IEvent>, IElementState> onEvents = null)
+        public LineProps(LineDirection direction)
         {
             this.Direction = direction;
         }
 
         public LineDirection Direction { get; }
-        public Action<IReadOnlyList<IEvent>, IElementState> OnEvents { get; set; }
     }
 
     public class Line : Element<LineState, Line>
@@ -54,7 +53,6 @@ namespace React.Box
 
         public void FireEvents(IReadOnlyList<IEvent> events)
         {
-            props.OnEvents?.Invoke(events, this);
             foreach (var child in nestedElementStates)
             {
                 child.FireEvents(events);
