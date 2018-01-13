@@ -34,10 +34,10 @@ namespace React.Box
         private readonly IElementState child;
         private readonly IElementState overlay;
 
-        public OverlayElementState(OverlayElementState existing, OverlayElement element, RenderContext context)
+        public OverlayElementState(OverlayElementState existing, OverlayElement element, RenderContext context, Bounds bounds)
         {
-            child = element.Props.Child.Update(existing?.child, context);
-            overlay = element.Props.Overlay.Update(existing?.overlay, context);
+            child = element.Props.Child.Update(existing?.child, context, bounds);
+            overlay = element.Props.Overlay.Update(existing?.overlay, context, bounds);
         }
 
         public Bounds BoundingBox => child.BoundingBox;

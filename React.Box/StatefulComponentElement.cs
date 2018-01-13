@@ -42,11 +42,11 @@ namespace React.Box
         private readonly IElementState renderResult;
         private readonly C componentInstance;
 
-        public StatefulComponentElementState(StatefulComponentElementState<P, S, C> existing, StatefulComponentElement<P, S, C> parent, RenderContext context)
+        public StatefulComponentElementState(StatefulComponentElementState<P, S, C> existing, StatefulComponentElement<P, S, C> parent, RenderContext context, Bounds bounds)
         {
             componentInstance = existing?.componentInstance ?? CreateInstance(parent.Props);
             componentInstance.updateContext = context.UpdateContext;
-            renderResult = componentInstance.Render(parent.Props, componentInstance.state, context.Context).Update(existing?.renderResult, context);
+            renderResult = componentInstance.Render(parent.Props, componentInstance.state, context.Context).Update(existing?.renderResult, context, bounds);
             if (componentInstance is IDisposable)
             {
                 context.Disposables.Add(componentInstance as IDisposable);

@@ -18,9 +18,9 @@ namespace React.Redux
             this.Child = child;
         }
         
-        public IElementState Update(IElementState existing, RenderContext renderContext)
+        public IElementState Update(IElementState existing, RenderContext renderContext, Bounds bounds)
         {
-            return new ReduxProviderElementState<TState, TAction>(this, existing, renderContext);
+            return new ReduxProviderElementState<TState, TAction>(this, existing, renderContext, bounds);
         }
 
         public IReduxStore<TState, TAction> Store { get; }
@@ -39,17 +39,16 @@ namespace React.Redux
         private TState state;
         private readonly IElementState nested;
 
-        public ReduxProviderElementState(ReduxProviderElement<TState, TAction> element, IElementState existing, RenderContext renderContext)
+        public ReduxProviderElementState(ReduxProviderElement<TState, TAction> element, IElementState existing, RenderContext renderContext, Bounds bounds)
         {
             var existingProviderState = existing as ReduxProviderElementState<TState, TAction>;
             this.state = existingProviderState?.state ?? element.Store.State;
             var nestedContext = new RenderContext(
-                renderContext.Bounds,
                 renderContext.Renderer, 
                 new ReduxProviderComponentContext<TState, TAction>(() => state, action => element.Store.Dispatch(action)), 
                 renderContext.UpdateContext,
                 renderContext.Disposables);
-            this.nested = element.Child.Update(existingProviderState?.nested, nestedContext);
+            this.nested = element.Child.Update(existingProviderState?.nested, nestedContext, bounds);
         }
 
         public Bounds BoundingBox => nested.BoundingBox;

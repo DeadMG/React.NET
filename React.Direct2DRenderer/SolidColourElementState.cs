@@ -14,7 +14,7 @@ namespace React.DirectRenderer
         private readonly Bounds boundingBox;
         private readonly SolidColourElementProps props;
 
-        public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, RenderContext context)
+        public SolidColourElementState(SolidColourElementState existing, SolidColourElement other, RenderContext context, Bounds bounds)
         {
             props = other.Props;
             brush = existing?.brush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new SharpDX.Mathematics.Interop.RawColor4
@@ -25,7 +25,7 @@ namespace React.DirectRenderer
                 A = other.Props.Colour.A
             });
             context.Disposables.Add(brush);
-            boundingBox = other.Props.Location != null ? other.Props.Location(context.Bounds) : context.Bounds;
+            boundingBox = other?.Props?.Location(bounds) ?? bounds;
         }
 
         public Bounds BoundingBox => boundingBox;

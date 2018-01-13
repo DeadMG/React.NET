@@ -59,19 +59,19 @@ namespace React.DirectRenderer
                 disposable?.Dispose();
         }
         
-        public ITextElementState UpdateTextElementState(IElementState existing, TextElement t, RenderContext context)
+        public ITextElementState UpdateTextElementState(IElementState existing, TextElement t, RenderContext context, Bounds bounds)
         {
-            return new TextElementState(existing as TextElementState, t, context);
+            return new TextElementState(existing as TextElementState, t, context, bounds);
         }
 
-        public ISolidColourElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement b2, RenderContext context)
+        public ISolidColourElementState UpdateSolidColourElementState(IElementState existing, SolidColourElement b2, RenderContext context, Bounds bounds)
         {
-            return new SolidColourElementState(existing as SolidColourElementState, b2, context);
+            return new SolidColourElementState(existing as SolidColourElementState, b2, context, bounds);
         }
 
-        public IImageElementState UpdateImageElementState(IElementState existing, ImageElement b2, RenderContext context)
+        public IImageElementState UpdateImageElementState(IElementState existing, ImageElement b2, RenderContext context, Bounds bounds)
         {
-            return new ImageElementState(existing as ImageElementState, b2, context);
+            return new ImageElementState(existing as ImageElementState, b2, context, bounds);
         }
 
         public static Renderer AssertRendererType(IRenderer renderer)

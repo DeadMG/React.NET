@@ -26,9 +26,9 @@ namespace React.Core
 
         public ImageElementProps Props { get; }
 
-        public IImageElementState Update(IElementState existing, RenderContext context)
+        public IImageElementState Update(IElementState existing, RenderContext context, Bounds bounds)
         {
-            return context.Renderer.UpdateImageElementState(existing, this, context);
+            return context.Renderer.UpdateImageElementState(existing, this, context, bounds);
         }
     }
 }

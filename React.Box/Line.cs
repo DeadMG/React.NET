@@ -35,18 +35,18 @@ namespace React.Box
         private readonly List<IElementState> nestedElementStates;
         private readonly LineProps props;
 
-        public LineState(LineState existing, Line e, RenderContext context)
+        public LineState(LineState existing, Line e, RenderContext context, Bounds bounds)
         {
             props = e.Props;
-            var bounds = context.Bounds;
+            var childBounds = bounds;
             nestedElementStates = e.Children.Select((elem, index) =>
             {
-                var result = elem?.Update(existing?.nestedElementStates?[index], context.WithBounds(bounds));
-                if (result != null) bounds = bounds.Remaining(e.Props.Direction, result.BoundingBox);
+                var result = elem?.Update(existing?.nestedElementStates?[index], context, childBounds);
+                if (result != null) childBounds = childBounds.Remaining(e.Props.Direction, result.BoundingBox);
                 return result;
             }).ToList();
 
-            BoundingBox = context.Bounds.Sum(e.Props.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
+            BoundingBox = bounds.Sum(e.Props.Direction, nestedElementStates.Where(p => p != null).Select(p => p.BoundingBox));
         }
         
         public Bounds BoundingBox { get; }

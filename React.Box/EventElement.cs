@@ -17,9 +17,9 @@ namespace React.Box
 
         public Action<TEvent> OnEvent { get; }
 
-        public IEventElementState<TEvent> Update(IElementState existing, RenderContext renderContext)
+        public IEventElementState<TEvent> Update(IElementState existing, RenderContext renderContext, Bounds bounds)
         {
-            return new EventElementState<TEvent>(this, renderContext.Bounds);
+            return new EventElementState<TEvent>(this, bounds);
         }
     }
 
@@ -68,9 +68,9 @@ namespace React.Box
         public Action<TEvent, TElement> OnEvent { get; }
         public IElement<TElement> Child { get; }
 
-        public IEventElementState<TEvent, TElement> Update(IElementState existing, RenderContext renderContext)
+        public IEventElementState<TEvent, TElement> Update(IElementState existing, RenderContext renderContext, Bounds bounds)
         {
-            return new EventElementState<TEvent, TElement>(this, existing, renderContext);
+            return new EventElementState<TEvent, TElement>(this, existing, renderContext, bounds);
         }
     }
 
@@ -88,10 +88,10 @@ namespace React.Box
         private readonly EventElement<TEvent, TElement> element;
         private readonly TElement nested;
 
-        public EventElementState(EventElement<TEvent, TElement> element, IElementState existing, RenderContext renderContext)
+        public EventElementState(EventElement<TEvent, TElement> element, IElementState existing, RenderContext renderContext, Bounds bounds)
         {
             this.element = element;
-            this.nested = element.Child.Update((existing as EventElementState<TEvent, TElement>)?.nested, renderContext);
+            this.nested = element.Child.Update((existing as EventElementState<TEvent, TElement>)?.nested, renderContext, bounds);
             this.BoundingBox = nested.BoundingBox;
         }
 

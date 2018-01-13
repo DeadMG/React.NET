@@ -14,7 +14,7 @@ namespace React.DirectRenderer
         private readonly Bitmap rawBitmap;
         private readonly System.Drawing.Image sourceImage;
 
-        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context)
+        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context, Bounds bounds)
         {
             if (existing != null && ReferenceEquals(existing.sourceImage, other.Props.Image))
             {
@@ -42,7 +42,7 @@ namespace React.DirectRenderer
                 }
             }
 
-            BoundingBox = new Bounds(context.Bounds.X, context.Bounds.Y, sourceImage.Width, sourceImage.Height);
+            BoundingBox = new Bounds(bounds.X, bounds.Y, sourceImage.Width, sourceImage.Height);
             context.Disposables.Add(other.Props.Image);
             context.Disposables.Add(rawBitmap);
         }

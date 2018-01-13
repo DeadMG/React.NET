@@ -11,9 +11,9 @@ namespace React.Box
         where E : Element<S, E>
         where S : class, IElementState
     {
-        public S Update(IElementState existing, RenderContext context)
+        public S Update(IElementState existing, RenderContext context, Bounds bounds)
         {
-            var result = (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(RenderContext) }).Invoke(new object[] { existing as S, (E)this, context });
+            var result = (S)typeof(S).GetConstructor(new Type[] { typeof(S), typeof(E), typeof(RenderContext), typeof(Bounds) }).Invoke(new object[] { existing as S, (E)this, context, bounds });
             if (result is IDisposable)
             {
                 context.Disposables.Add(result as IDisposable);

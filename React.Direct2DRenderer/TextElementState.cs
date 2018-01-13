@@ -16,13 +16,13 @@ namespace React.DirectRenderer
         private readonly List<IElementState> children;
         private readonly TextElementProps props;
 
-        public TextElementState(TextElementState existing, TextElement element, RenderContext context)
+        public TextElementState(TextElementState existing, TextElement element, RenderContext context, Bounds bounds)
         {
             props = element.Props;
             format = existing?.format ?? new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(context.Renderer).fontFactory, "Times New Roman", 18);
-            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(context.Renderer).fontFactory, element.Props.Text, format, context.Bounds.Width, context.Bounds.Height);
+            layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(context.Renderer).fontFactory, element.Props.Text, format, bounds.Width, bounds.Height);
             textBrush = existing?.textBrush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new RawColor4(1, 1, 1, 1));
-            BoundingBox = new Bounds(x: context.Bounds.X, y: context.Bounds.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
+            BoundingBox = new Bounds(x: bounds.X, y: bounds.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
 
             context.Disposables.Add(format);
             context.Disposables.Add(layout);
@@ -37,7 +37,7 @@ namespace React.DirectRenderer
                     continue;
                 }
                 var location = locations[0];
-                childStates.Add(child.Child.Update(null, context.WithBounds(new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height))));
+                childStates.Add(child.Child.Update(null, context, new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height)));
             }
             children = childStates;
         }

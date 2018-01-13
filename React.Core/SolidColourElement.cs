@@ -32,9 +32,9 @@ namespace React.Core
 
         public SolidColourElementProps Props { get; }
 
-        public ISolidColourElementState Update(IElementState existing, RenderContext context)
+        public ISolidColourElementState Update(IElementState existing, RenderContext context, Bounds bounds)
         {
-            return context.Renderer.UpdateSolidColourElementState(existing, this, context);
+            return context.Renderer.UpdateSolidColourElementState(existing, this, context, bounds);
         }
     }
 }

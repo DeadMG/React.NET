@@ -78,7 +78,7 @@ namespace React.Box
         private void OnUpdatesFinished()
         {
             var newDisposables = new HashSet<IDisposable>();
-            var newElementState = root.Update(currentElementState, new RenderContext(currentBounds, renderer, context, this, newDisposables));
+            var newElementState = root.Update(currentElementState, new RenderContext(renderer, context, this, newDisposables), currentBounds);
             foreach (var disposable in currentDisposables)
             {
                 if (!newDisposables.Contains(disposable))
@@ -106,7 +106,7 @@ namespace React.Box
             this.context = context;
             currentBounds = initialBounds;
             currentDisposables = new HashSet<IDisposable>();
-            currentElementState = root.Update(null, new RenderContext(currentBounds, renderer, context, this, currentDisposables));
+            currentElementState = root.Update(null, new RenderContext(renderer, context, this, currentDisposables), currentBounds);
             renderer.RenderFrame(currentElementState);
         }
 

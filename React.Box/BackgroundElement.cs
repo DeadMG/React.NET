@@ -35,11 +35,11 @@ namespace React.Box
         private readonly IElementState nestedState;
         private readonly BackgroundElementProps props;
 
-        public BackgroundElementState(BackgroundElementState existingState, BackgroundElement other, RenderContext context)
+        public BackgroundElementState(BackgroundElementState existingState, BackgroundElement other, RenderContext context, Bounds bounds)
         {
             props = other.Props;
-            nestedState = other.Child.Update(existingState?.nestedState, context);
-            solidColourState = context.Renderer.UpdateSolidColourElementState(existingState?.solidColourState, new SolidColourElement(new SolidColourElementProps(other.Props.Colour, b => nestedState.BoundingBox)), context);
+            nestedState = other.Child.Update(existingState?.nestedState, context, bounds);
+            solidColourState = context.Renderer.UpdateSolidColourElementState(existingState?.solidColourState, new SolidColourElement(new SolidColourElementProps(other.Props.Colour, b => nestedState.BoundingBox)), context, bounds);
             
         }
 

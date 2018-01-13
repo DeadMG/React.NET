@@ -21,10 +21,10 @@ namespace React.Box
     {
         private readonly IElementState nestedState;
         
-        public StretchElementState(StretchElementState existing, StretchElement element, RenderContext context)
+        public StretchElementState(StretchElementState existing, StretchElement element, RenderContext context, Bounds bounds)
         {
-            nestedState = element.Child.Update(existing?.nestedState, context);
-            BoundingBox = context.Bounds;
+            nestedState = element.Child.Update(existing?.nestedState, context, bounds);
+            BoundingBox = bounds;
         }
 
         public Bounds BoundingBox { get; set; }
