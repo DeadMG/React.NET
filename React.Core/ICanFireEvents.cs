@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface ISolidColourElementState : IElementState
+    public interface ICanFireEvents
     {
+        void FireEvents(IReadOnlyList<IEvent> events);
     }
 }

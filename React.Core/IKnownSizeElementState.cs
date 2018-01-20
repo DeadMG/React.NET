@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IImageElementState : IElementState
+    public interface IKnownSizeElementState : ICanFireEvents
     {
+        void Render(IRenderer r, Bounds bounds);
+
+        Dimensions Size { get; }
     }
 }

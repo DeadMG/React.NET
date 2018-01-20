@@ -289,14 +289,13 @@ namespace React.Box
         private TextuallyPositionedChild RenderCaret(TextSelection selection)
         {
             var caretColour = new Colour(r: 1.0f, g: 1.0f, b: 1.0f, a: 1.0f);
-            Func<Bounds, Bounds> caretLocation = (Bounds bounds) => new Bounds(x: bounds.X, y: bounds.Y, width: 1, height: bounds.Height);
-            return new TextuallyPositionedChild(selection, new SolidColourElement(new SolidColourElementProps(caretColour, caretLocation)));
+            return new TextuallyPositionedChild(selection, new SolidColourElement(new SolidColourElementProps(caretColour), new FixedWidthElement(1)));
         }
 
         private TextuallyPositionedChild RenderTextRangeSelection(TextSelection selection)
         {
             var selectionHighlightColour = new Colour(r: 0.0f, g: 0.75f, b: 1.0f, a: 0.5f);
-            return new TextuallyPositionedChild(selection, new SolidColourElement(new SolidColourElementProps(selectionHighlightColour, null)));
+            return new TextuallyPositionedChild(selection, new SolidColourElement(new SolidColourElementProps(selectionHighlightColour), new StretchElement(null)));
         }
     }
 }

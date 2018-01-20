@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageElementState.cs" />
+    <Compile Include="KnownSizeSolidColourElementState.cs" />
     <Compile Include="SolidColourElementState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />

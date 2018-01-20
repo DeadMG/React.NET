@@ -9,12 +9,12 @@ using SharpDX.Direct2D1;
 
 namespace React.DirectRenderer
 {
-    public class ImageElementState : IImageElementState
+    public class ImageElementState : IKnownSizeElementState
     {
         private readonly Bitmap rawBitmap;
         private readonly System.Drawing.Image sourceImage;
 
-        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context, Bounds bounds)
+        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context)
         {
             if (existing != null && ReferenceEquals(existing.sourceImage, other.Props.Image))
             {
@@ -41,23 +41,22 @@ namespace React.DirectRenderer
                     }
                 }
             }
-
-            BoundingBox = new Bounds(bounds.X, bounds.Y, sourceImage.Width, sourceImage.Height);
+            
             context.Disposables.Add(other.Props.Image);
             context.Disposables.Add(rawBitmap);
         }
 
-        public Bounds BoundingBox { get; } 
+        public Dimensions Size => new Dimensions(sourceImage.Width, sourceImage.Height);
 
         public void FireEvents(IReadOnlyList<IEvent> events)
         {
         }
 
-        public void Render(IRenderer r)
+        public void Render(IRenderer r, Bounds bounds)
         {
             Renderer.AssertRendererType(r).d2dTarget.DrawBitmap(
                 rawBitmap,
-                new SharpDX.Mathematics.Interop.RawRectangleF(BoundingBox.X, BoundingBox.Y, BoundingBox.X + BoundingBox.Width, BoundingBox.Y + BoundingBox.Height),
+                new SharpDX.Mathematics.Interop.RawRectangleF(bounds.X, bounds.Y, bounds.X + bounds.Width, bounds.Y + bounds.Height),
                 1.0f,
                 BitmapInterpolationMode.Linear,
                 null);

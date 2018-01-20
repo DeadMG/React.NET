@@ -42,16 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundElement.cs" />
     <Compile Include="BackgroundUpdateContext.cs" />
     <Compile Include="BoundsExtensions.cs" />
     <Compile Include="ChangeEvent.cs" />
     <Compile Include="EventElement.cs" />
+    <Compile Include="FixedWidthElement.cs" />
     <Compile Include="IChangeEvent.cs" />
     <Compile Include="KeyboardEvent.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="MouseState.cs" />
     <Compile Include="ResizeState.cs" />
+    <Compile Include="SizeBindingElementState.cs" />
     <Compile Include="StatefulComponentElement.cs" />
     <Compile Include="StatefulComponent.cs" />
     <Compile Include="StatelessComponent.cs" />

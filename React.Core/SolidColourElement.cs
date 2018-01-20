@@ -8,31 +8,26 @@ namespace React.Core
 {
     public class SolidColourElementProps
     {
-        public SolidColourElementProps(Colour colour, Func<Bounds, Bounds> location)
+        public SolidColourElementProps(Colour colour)
         {
             this.Colour = colour;
-            this.Location = location;
         }
-
-        public SolidColourElementProps(Colour colour, int width, int height)
-            : this(colour, (bounds) => new Bounds(x: bounds.X, y: bounds.Y, width: width, height: height))
-        {
-        }
-
+        
         public Colour Colour { get; }
-        public Func<Bounds, Bounds> Location { get; }
     }
 
-    public class SolidColourElement : IElement<ISolidColourElementState>
+    public class SolidColourElement : IElement<IElementState>
     {
-        public SolidColourElement(SolidColourElementProps props)
+        public SolidColourElement(SolidColourElementProps props, IElement<IElementState> child)
         {
             this.Props = props;
+            this.Child = child;
         }
 
         public SolidColourElementProps Props { get; }
+        public IElement<IElementState> Child { get; }
 
-        public ISolidColourElementState Update(IElementState existing, RenderContext context, Bounds bounds)
+        public IElementState Update(IElementState existing, RenderContext context, Bounds bounds)
         {
             return context.Renderer.UpdateSolidColourElementState(existing, this, context, bounds);
         }

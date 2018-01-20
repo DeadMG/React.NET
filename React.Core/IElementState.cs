@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace React.Core
 {
-    public interface IElementState
+    public interface IElementState : ICanFireEvents
     {
         void Render(IRenderer r);
 
         Bounds BoundingBox { get; }
-
-        void FireEvents(IReadOnlyList<IEvent> events);
     }
 }
