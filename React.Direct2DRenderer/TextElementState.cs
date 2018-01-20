@@ -32,12 +32,10 @@ namespace React.DirectRenderer
             foreach(var child in element.Children)
             {
                 var locations = layout.HitTestTextRange(child.Location.StartIndex, child.Location.EndIndex - child.Location.StartIndex, BoundingBox.X, BoundingBox.Y);
-                if (locations.Length == 0)
+                foreach(var location in locations)
                 {
-                    continue;
+                    childStates.Add(child.Child.Update(null, context, new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height)));
                 }
-                var location = locations[0];
-                childStates.Add(child.Child.Update(null, context, new Bounds(x: (int)location.Left, y: (int)location.Top, width: (int)location.Width, height: (int)location.Height)));
             }
             children = childStates;
         }
