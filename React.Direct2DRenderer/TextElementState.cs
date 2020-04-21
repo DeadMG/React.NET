@@ -22,7 +22,7 @@ namespace React.DirectRenderer
             format = existing?.format ?? new SharpDX.DirectWrite.TextFormat(Renderer.AssertRendererType(context.Renderer).fontFactory, "Times New Roman", 18);
             layout = new SharpDX.DirectWrite.TextLayout(Renderer.AssertRendererType(context.Renderer).fontFactory, element.Props.Text, format, bounds.Width, bounds.Height);
             textBrush = existing?.textBrush ?? new SharpDX.Direct2D1.SolidColorBrush(Renderer.AssertRendererType(context.Renderer).d2dTarget, new RawColor4(1, 1, 1, 1));
-            BoundingBox = new Bounds(x: bounds.X, y: bounds.Y, width: (int)layout.Metrics.Width, height: (int)layout.Metrics.Height);
+            BoundingBox = new Bounds(x: bounds.X, y: bounds.Y, width: (int)layout.Metrics.WidthIncludingTrailingWhitespace, height: (int)layout.Metrics.Height);
 
             context.Disposables.Add(format);
             context.Disposables.Add(layout);
