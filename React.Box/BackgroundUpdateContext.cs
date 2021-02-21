@@ -35,45 +35,88 @@ namespace React.Box
             lock (this)
             {
                 queuedUpdates.Add(newUpdate);
-                if (queuedUpdates.Count >= 1 && !running)
+                if (thereAreNoQueuedUpdates() || running)
                 {
-                    running = true;
-                    ThreadPool.QueueUserWorkItem(obj =>
+                    return;
+                }
+                running = true;
+                ThreadPool.QueueUserWorkItem(obj =>
+                {
+                    while (true)
                     {
-                        while (true)
+                        List<Update> updates = fetchQueuedUpdates();
+                        if (thereAreQueuedUp(updates))
                         {
-                            List<Update> updates = null;
+                            handle(updates);
+                        }
+                        else
+                        {
+                            OnUpdatesFinished();
                             lock (this)
                             {
-                                updates = queuedUpdates;
-                                queuedUpdates = new List<Update>();
-                            }
-                            if (updates.Count == 0)
-                            {
-                                OnUpdatesFinished();
-                                lock (this)
+                                if (newUpdatesHaveArrived())
                                 {
-                                    if (queuedUpdates.Count != 0)
-                                    {
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        running = false;
-                                        return;
-                                    }
+                                    continue;
+                                }
+                                else
+                                {
+                                    running = false;
+                                    return;
                                 }
                             }
-                            foreach (var update in updates)
-                            {
-                                update.UserDefinedAction?.Invoke();
-                                if (update.ExternalEvent != null) currentElementState.FireEvents(new List<IEvent> { update.ExternalEvent });
-                            }
                         }
-                    });
-                }
+                    }
+                });
             }
         }
+
+        private bool thereAreNoQueuedUpdates()
+        {
+            return queuedUpdates.Count < 1;
+        }
+
+        private List<Update> fetchQueuedUpdates()
+        {
+            lock (this)
+            {
+                updates = queuedUpdates;
+                queuedUpdates = new List<Update>();
+                return updates;
+            }
+        }
+
+        private bool thereAreQueuedUp(List<Update> updates)
+        {
+            return updates.Count != 0;
+        }
+
+        private bool newUpdatesHaveArrived()
+        {
+            return queuedUpdates.Count != 0;
+        }
+
+        private void handle(List<Update> updates)
+        {
+            foreach (var update in updates)
+            {
+                invokeUserDefinedAction(update);
+                handleExternalEvent(update);
+            }
+        }
+
+        private void invokeUserDefinedAction(Update update)
+        {
+            update.UserDefinedAction?.Invoke();
+        }
+
+        private void handleExternalEvent(Update update)
+        {
+            if (update.ExternalEvent != null)
+            {
+                currentElementState.FireEvents(new List<IEvent> { update.ExternalEvent });
+            }
+        }
+
 
         private void OnUpdatesFinished()
         {
