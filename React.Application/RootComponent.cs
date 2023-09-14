@@ -26,8 +26,7 @@ namespace React.Application
                     ProjectViewerComponent.CreateElement(null),
                     new Line(new LineProps(LineDirection.Horizontal),
                         new TextElement(new TextElementProps("Clicked:")),
-                        new EventElement<ChangeEvent<MouseState>>((mouse, elementState) => this.TextClicked(mouse, elementState, state, dispatch),
-                            new TextElement(new TextElementProps(state.Clicked.ToString()))),
+                        new TextElement(new TextElementProps(state.Clicked.ToString()) { OnEvent = (e, s) => this.TextClicked(e, s, state, dispatch) }),
                         this.RenderRandomBox(state, dispatch))));
         }
 
@@ -36,8 +35,10 @@ namespace React.Application
             return ControlledTextBox.CreateElement(new ControlledTextBoxProps(state.TextBoxState, onTextStateChange: sel => dispatch(new StoreState { Clicked = state.Clicked, TextBoxState = sel })));
         }
 
-        private void TextClicked(ChangeEvent<MouseState> mouse, IElementState element, StoreState state, Action<StoreState> dispatch)
+        private void TextClicked(IEvent e, IElementState element, StoreState state, Action<StoreState> dispatch)
         {
+            if (!(e is ChangeEvent<MouseState> mouse)) return;
+
             if (mouse.OriginalState.LeftButtonDown && !mouse.NewState.LeftButtonDown && element.BoundingBox.IsInBounds(mouse.NewState))
             {
                 dispatch(new StoreState { Clicked = !state.Clicked, TextBoxState = state.TextBoxState });

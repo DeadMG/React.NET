@@ -54,10 +54,20 @@ namespace React.Box
 
         public override IElement Render(ControlledTextBoxProps props, ControlledTextBoxState state, IComponentContext context)
         {
-            return new EventElement<ChangeEvent<MouseState>>((@event, eventElementState) => this.OnTextMouse(@event, eventElementState, props, state),
-                new EventElement<KeyboardEvent>((@event, textElementState) => this.OnTextKeyboard(@event, props, state),
-                    new TextElement(new TextElementProps(Text(props)),
-                        Selections(props).Select(p => RenderSelection(p)).ToArray())));
+            return new TextElement(new TextElementProps(Text(props)) { OnEvent = (e, s) => this.OnEvent(e, s, props, state) },
+                Selections(props).Select(p => RenderSelection(p)).ToArray());
+        }
+
+        private void OnEvent(IEvent @event, ITextElementState elementState, ControlledTextBoxProps props, ControlledTextBoxState state)
+        {
+            if (@event is ChangeEvent<MouseState> mouseEvent)
+            {
+                this.OnTextMouse(mouseEvent, elementState, props, state);
+            }
+            if (@event is KeyboardEvent keyboardEvent)
+            {
+                this.OnTextKeyboard(keyboardEvent, props, state);
+            }
         }
 
         private string Text(ControlledTextBoxProps props)
@@ -243,13 +253,10 @@ namespace React.Box
             props.OnTextStateChange(new TextState(ReplaceSelection(keyboardEvent.TextValue, props.TextState.TextPieces).ToList()));
         }
 
-        private void OnTextMouse(ChangeEvent<MouseState> clickEvent, IElementState elementState, ControlledTextBoxProps props, ControlledTextBoxState state)
+        private void OnTextMouse(ChangeEvent<MouseState> clickEvent, ITextElementState elementState, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
-            var textElementState = (elementState as EventElementState<KeyboardEvent>)?.Nested as ITextElementState;
-            if (textElementState == null) return;
-
-            var originalTextIndex = textElementState.GetTextIndex(clickEvent.OriginalState.X, clickEvent.OriginalState.Y);
-            var newTextIndex = textElementState.GetTextIndex(clickEvent.NewState.X, clickEvent.NewState.Y);
+            var originalTextIndex = elementState.GetTextIndex(clickEvent.OriginalState.X, clickEvent.OriginalState.Y);
+            var newTextIndex = elementState.GetTextIndex(clickEvent.NewState.X, clickEvent.NewState.Y);
             if (!originalTextIndex.HasValue || !newTextIndex.HasValue)
             {
                 if (!clickEvent.OriginalState.LeftButtonDown && clickEvent.NewState.LeftButtonDown && props.TextState.TextPieces.Any(p => p.Selected && p.Text.Length != 0))

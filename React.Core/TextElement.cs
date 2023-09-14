@@ -1,4 +1,6 @@
-﻿namespace React.Core
+﻿using System;
+
+namespace React.Core
 {
     public class TextuallyPositionedChild
     {
@@ -20,6 +22,7 @@
         }
 
         public string Text { get; }
+        public Action<IEvent, ITextElementState> OnEvent { get; set; }
     }
     
     public class TextElement : IElement

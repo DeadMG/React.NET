@@ -51,6 +51,11 @@ namespace React.DirectRenderer
 
         public void FireEvents(IReadOnlyList<IEvent> events)
         {
+            if (props.OnEvent == null) return;
+            foreach (var @event in events)
+            {
+                props.OnEvent(@event, this);
+            }
         }
 
         public int? GetTextIndex(int x, int y)
