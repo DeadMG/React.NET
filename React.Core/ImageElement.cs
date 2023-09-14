@@ -12,7 +12,7 @@ namespace React.Core
         public Image Image { get; }
     }
 
-    public class ImageElement : IElement, IKnownSizeElement
+    public class ImageElement : IElement
     {
         public ImageElement(ImageElementProps props)
         {
@@ -24,11 +24,6 @@ namespace React.Core
         public IElementState Update(IElementState existing, RenderContext context, Bounds bounds)
         {
             return context.Renderer.UpdateImageElementState(existing, this, context, bounds);
-        }
-
-        public IKnownSizeElementState Update(IKnownSizeElementState existing, RenderContext context)
-        {
-            return context.Renderer.UpdateImageElementState(existing, this, context);
         }
     }
 }

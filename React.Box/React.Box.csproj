@@ -51,7 +51,6 @@
     <Compile Include="KeyboardState.cs" />
     <Compile Include="MouseState.cs" />
     <Compile Include="ResizeState.cs" />
-    <Compile Include="SizeBindingElementState.cs" />
     <Compile Include="StatefulComponentElement.cs" />
     <Compile Include="StatefulComponent.cs" />
     <Compile Include="StatelessComponent.cs" />

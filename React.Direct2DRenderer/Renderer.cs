@@ -67,23 +67,13 @@ namespace React.DirectRenderer
 
         public IElementState UpdateImageElementState(IElementState existing, ImageElement b2, RenderContext context, Bounds bounds)
         {
-            return new SizeBindingElementState<IKnownSizeElementState>(UpdateImageElementState((existing as SizeBindingElementState<IKnownSizeElementState>)?.Wrapped, b2, context), bounds);
+            return new ImageElementState(existing as ImageElementState, b2, context, bounds);
         }
 
         public static Renderer AssertRendererType(IRenderer renderer)
         {
             if (!(renderer is Renderer)) throw new InvalidOperationException("Can't render D2D compnents with a non-D2D renderer");
             return renderer as Renderer;
-        }
-        
-        public IKnownSizeElementState UpdateImageElementState(IKnownSizeElementState existing, ImageElement element, RenderContext context)
-        {
-            return new ImageElementState(existing as ImageElementState, element, context);
-        }
-
-        public IKnownSizeElementState UpdateSolidColourElementState(IKnownSizeElementState existing, KnownSizeSolidColourElement element, RenderContext context)
-        {
-            return new KnownSizeSolidColourElementState(existing as KnownSizeSolidColourElementState, element, context);
         }
     }
 }

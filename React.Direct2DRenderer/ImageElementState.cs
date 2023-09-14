@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace React.DirectRenderer
 {
-    public class ImageElementState : IKnownSizeElementState
+    public class ImageElementState : IElementState
     {
         private readonly Bitmap rawBitmap;
         private readonly System.Drawing.Image sourceImage;
+        private readonly Bounds bounds;
 
-        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context)
+        public ImageElementState(ImageElementState existing, ImageElement other, RenderContext context, Bounds bounds)
         {
             if (existing != null && ReferenceEquals(existing.sourceImage, other.Props.Image))
             {
@@ -36,18 +37,18 @@ namespace React.DirectRenderer
                     }
                 }
             }
-            
+            this.bounds = new Bounds(bounds.X, bounds.Y, sourceImage.Width, sourceImage.Height);
             context.Disposables.Add(other.Props.Image);
             context.Disposables.Add(rawBitmap);
         }
 
-        public Dimensions Size => new Dimensions(sourceImage.Width, sourceImage.Height);
+        public Bounds BoundingBox => bounds;
 
         public void FireEvents(IReadOnlyList<IEvent> events)
         {
         }
 
-        public void Render(IRenderer r, Bounds bounds)
+        public void Render(IRenderer r)
         {
             Renderer.AssertRendererType(r).d2dTarget.DrawBitmap(
                 rawBitmap,

@@ -48,14 +48,11 @@
     <Compile Include="ICanFireEvents.cs" />
     <Compile Include="IComponentContext.cs" />
     <Compile Include="IEvent.cs" />
-    <Compile Include="IKnownSizeElement.cs" />
-    <Compile Include="IKnownSizeElementState.cs" />
     <Compile Include="ImageElement.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="IElementState.cs" />
     <Compile Include="ITextElementState.cs" />
-    <Compile Include="KnownSizeSolidColourElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolidColourElement.cs" />
     <Compile Include="TextElement.cs" />
