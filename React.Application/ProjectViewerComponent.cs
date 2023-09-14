@@ -8,7 +8,7 @@ namespace React.Application
     {
         private static readonly Image puppyOwl = Image.FromFile("puppyowl.png");
 
-        public override IElement<IElementState> Render(EmptyProps props, IComponentContext context)
+        public override IElement Render(EmptyProps props, IComponentContext context)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("File1")),

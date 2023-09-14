@@ -17,25 +17,23 @@ namespace React.Box
 
     public class Line : Element<LineState, Line>
     {
-        public Line(LineProps props, params IElement<IElementState>[] children)
+        public Line(LineProps props, params IElement[] children)
         {
             if (props == null) throw new InvalidOperationException();
             this.Children = children;
             this.Props = props;
         }
 
-        public IElement<IElementState>[] Children { get; }
+        public IElement[] Children { get; }
         public LineProps Props { get; }
     }
 
     public class LineState : IElementState
     {
         private readonly List<IElementState> nestedElementStates;
-        private readonly LineProps props;
 
         public LineState(LineState existing, Line e, RenderContext context, Bounds bounds)
         {
-            props = e.Props;
             var childBounds = bounds;
             nestedElementStates = e.Children.Select((elem, index) =>
             {

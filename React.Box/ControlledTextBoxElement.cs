@@ -52,10 +52,10 @@ namespace React.Box
         {
         }
 
-        public override IElement<IElementState> Render(ControlledTextBoxProps props, ControlledTextBoxState state, IComponentContext context)
+        public override IElement Render(ControlledTextBoxProps props, ControlledTextBoxState state, IComponentContext context)
         {
-            return new EventElement<ChangeEvent<MouseState>, IEventElementState<KeyboardEvent, ITextElementState>>((@event, eventElementState) => this.OnTextMouse(@event, eventElementState.Nested, props, state),
-                new EventElement<KeyboardEvent, ITextElementState>((@event, textElementState) => this.OnTextKeyboard(@event, textElementState, props, state),
+            return new EventElement<ChangeEvent<MouseState>>((@event, eventElementState) => this.OnTextMouse(@event, eventElementState, props, state),
+                new EventElement<KeyboardEvent>((@event, textElementState) => this.OnTextKeyboard(@event, props, state),
                     new TextElement(new TextElementProps(Text(props)),
                         Selections(props).Select(p => RenderSelection(p)).ToArray())));
         }
@@ -202,7 +202,7 @@ namespace React.Box
             }
         }
 
-        private void OnTextKeyboard(KeyboardEvent keyboardEvent, ITextElementState textElementState, ControlledTextBoxProps props, ControlledTextBoxState state)
+        private void OnTextKeyboard(KeyboardEvent keyboardEvent, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
             if (!keyboardEvent.WasUp) return;
 
@@ -243,8 +243,11 @@ namespace React.Box
             props.OnTextStateChange(new TextState(ReplaceSelection(keyboardEvent.TextValue, props.TextState.TextPieces).ToList()));
         }
 
-        private void OnTextMouse(ChangeEvent<MouseState> clickEvent, ITextElementState textElementState, ControlledTextBoxProps props, ControlledTextBoxState state)
+        private void OnTextMouse(ChangeEvent<MouseState> clickEvent, IElementState elementState, ControlledTextBoxProps props, ControlledTextBoxState state)
         {
+            var textElementState = (elementState as EventElementState<KeyboardEvent>)?.Nested as ITextElementState;
+            if (textElementState == null) return;
+
             var originalTextIndex = textElementState.GetTextIndex(clickEvent.OriginalState.X, clickEvent.OriginalState.Y);
             var newTextIndex = textElementState.GetTextIndex(clickEvent.NewState.X, clickEvent.NewState.Y);
             if (!originalTextIndex.HasValue || !newTextIndex.HasValue)

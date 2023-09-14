@@ -5,7 +5,7 @@ namespace React.Application
 {
     public class MenuComponent : StatelessComponent<MenuComponent>
     {
-        public override IElement<IElementState> Render(EmptyProps props, IComponentContext context)
+        public override IElement Render(EmptyProps props, IComponentContext context)
         {
             return new Line(new LineProps(LineDirection.Horizontal),
                 MenuItemComponent.CreateElement(new MenuItemProps { Name = "File" }),

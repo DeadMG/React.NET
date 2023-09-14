@@ -11,13 +11,13 @@ namespace React.Application
         {
         }
         
-        public override IElement<IElementState> Render(EmptyProps props, IReduxComponentContext<StoreState, StoreState> context)
+        public override IElement Render(EmptyProps props, IReduxComponentContext<StoreState, StoreState> context)
         {
             return new SolidColourElement(new SolidColourElementProps(new Colour(r: 0.0f, g: 0.0f, b: 0.0f, a: 1.0f)),
                 context.State.Clicked ? new StretchElement(this.RenderContents(context.State, context.Dispatch)) : this.RenderContents(context.State, context.Dispatch));
         }
 
-        private IElement<IElementState> RenderContents(StoreState state, Action<StoreState> dispatch)
+        private IElement RenderContents(StoreState state, Action<StoreState> dispatch)
         {
             return new Line(new LineProps(LineDirection.Vertical),
                 new TextElement(new TextElementProps("DirectReact Sample")),
@@ -26,12 +26,12 @@ namespace React.Application
                     ProjectViewerComponent.CreateElement(null),
                     new Line(new LineProps(LineDirection.Horizontal),
                         new TextElement(new TextElementProps("Clicked:")),
-                        new EventElement<ChangeEvent<MouseState>, IElementState>((mouse, elementState) => this.TextClicked(mouse, elementState, state, dispatch),
+                        new EventElement<ChangeEvent<MouseState>>((mouse, elementState) => this.TextClicked(mouse, elementState, state, dispatch),
                             new TextElement(new TextElementProps(state.Clicked.ToString()))),
                         this.RenderRandomBox(state, dispatch))));
         }
 
-        private IElement<IElementState> RenderRandomBox(StoreState state, Action<StoreState> dispatch)
+        private IElement RenderRandomBox(StoreState state, Action<StoreState> dispatch)
         {
             return ControlledTextBox.CreateElement(new ControlledTextBoxProps(state.TextBoxState, onTextStateChange: sel => dispatch(new StoreState { Clicked = state.Clicked, TextBoxState = sel })));
         }

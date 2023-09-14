@@ -10,16 +10,16 @@
         public Colour Colour { get; }
     }
 
-    public class SolidColourElement : IElement<IElementState>
+    public class SolidColourElement : IElement
     {
-        public SolidColourElement(SolidColourElementProps props, IElement<IElementState> child)
+        public SolidColourElement(SolidColourElementProps props, IElement child)
         {
             this.Props = props;
             this.Child = child;
         }
 
         public SolidColourElementProps Props { get; }
-        public IElement<IElementState> Child { get; }
+        public IElement Child { get; }
 
         public IElementState Update(IElementState existing, RenderContext context, Bounds bounds)
         {

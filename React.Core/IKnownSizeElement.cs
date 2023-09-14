@@ -1,8 +1,7 @@
 ﻿namespace React.Core
 {
-    public interface IKnownSizeElement<out ElementState>
-        where ElementState : IKnownSizeElementState
+    public interface IKnownSizeElement
     {
-        ElementState Update(IKnownSizeElementState existing, RenderContext renderContext);
+        IKnownSizeElementState Update(IKnownSizeElementState existing, RenderContext renderContext);
     }
 }

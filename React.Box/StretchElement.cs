@@ -5,12 +5,12 @@ namespace React.Box
 {
     public class StretchElement : Element<StretchElementState, StretchElement>
     {
-        public StretchElement(IElement<IElementState> child)
+        public StretchElement(IElement child)
         {
             this.Child = child;
         }
 
-        public IElement<IElementState> Child { get; }
+        public IElement Child { get; }
     }
 
     public class StretchElementState : IElementState

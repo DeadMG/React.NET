@@ -17,6 +17,6 @@ namespace React.Box
             return new StatelessComponentElement<P, C>(currentProps);
         }
 
-        public abstract IElement<IElementState> Render(P props, IComponentContext context);
+        public abstract IElement Render(P props, IComponentContext context);
     }
 }

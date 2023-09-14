@@ -5,14 +5,14 @@ namespace React.Box
 {
     public class OverlayElementProps
     {
-        public OverlayElementProps(IElement<IElementState> child, IElement<IElementState> overlay)
+        public OverlayElementProps(IElement child, IElement overlay)
         {
             this.Overlay = overlay;
             this.Child = child;
         }
 
-        public IElement<IElementState> Child { get; }
-        public IElement<IElementState> Overlay { get; }
+        public IElement Child { get; }
+        public IElement Overlay { get; }
     }
 
     public class OverlayElement : Element<OverlayElementState, OverlayElement>

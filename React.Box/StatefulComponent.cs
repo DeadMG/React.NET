@@ -20,7 +20,7 @@ namespace React.Box
             return new StatefulComponentElement<P, S, C>(currentProps);
         }
         
-        public abstract IElement<IElementState> Render(P props, S state, IComponentContext context);
+        public abstract IElement Render(P props, S state, IComponentContext context);
 
         public Task SetState(S newState)
         {

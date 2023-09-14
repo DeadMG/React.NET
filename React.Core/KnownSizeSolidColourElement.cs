@@ -12,7 +12,7 @@
         public Colour Colour { get; }
     }
 
-    public class KnownSizeSolidColourElement : IKnownSizeElement<IKnownSizeElementState>
+    public class KnownSizeSolidColourElement : IKnownSizeElement
     {
         public KnownSizeSolidColourElement(KnownSizeSolidColourElementProps props)
         {

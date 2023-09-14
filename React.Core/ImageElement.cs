@@ -12,7 +12,7 @@ namespace React.Core
         public Image Image { get; }
     }
 
-    public class ImageElement : IElement<IElementState>, IKnownSizeElement<IKnownSizeElementState>
+    public class ImageElement : IElement, IKnownSizeElement
     {
         public ImageElement(ImageElementProps props)
         {

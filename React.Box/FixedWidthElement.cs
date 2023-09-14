@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace React.Box
 {
-    public class FixedWidthElement : IElement<IElementState>
+    public class FixedWidthElement : IElement
     {
         public FixedWidthElement(int width)
         {

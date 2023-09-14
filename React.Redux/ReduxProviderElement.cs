@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace React.Redux
 {
-    public class ReduxProviderElement<TState, TAction> : IElement<IElementState>
+    public class ReduxProviderElement<TState, TAction> : IElement
         where TState : class
     {        
-        public ReduxProviderElement(IReduxStore<TState, TAction> store, IElement<IElementState> child)
+        public ReduxProviderElement(IReduxStore<TState, TAction> store, IElement child)
         {
             this.Store = store;
             this.Child = child;
@@ -22,9 +22,9 @@ namespace React.Redux
         }
 
         public IReduxStore<TState, TAction> Store { get; }
-        public IElement<IElementState> Child { get; }
+        public IElement Child { get; }
 
-        public static ReduxProviderElement<TState2, TAction2> Create<TState2, TAction2>(IReduxStore<TState2, TAction2> store, IElement<IElementState> child)
+        public static ReduxProviderElement<TState2, TAction2> Create<TState2, TAction2>(IReduxStore<TState2, TAction2> store, IElement child)
             where TState2 : class
         {
             return new ReduxProviderElement<TState2, TAction2>(store, child);
