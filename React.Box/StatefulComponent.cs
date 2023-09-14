@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using React.Core;
+using System;
 using System.Threading.Tasks;
-using React.Core;
 
 namespace React.Box
-{    
+{
     public abstract class StatefulComponent<P, S, C>
         where C : StatefulComponent<P, S, C>
     {

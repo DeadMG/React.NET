@@ -1,17 +1,11 @@
-﻿using React.DirectRenderer;
-using SharpDX.RawInput;
-using SharpDX.Windows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using React.Box;
 using React.Core;
-using System.Drawing;
-using React.Box;
-using Redux.Box;
+using React.DirectRenderer;
 using React.Redux;
+using Redux.Box;
+using SharpDX.Windows;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace React.Application
 {
